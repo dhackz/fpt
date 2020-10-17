@@ -5,6 +5,7 @@ import { Route } from "react-router";
 import { BrowserRouter } from "react-router-dom";
 import SelectGamemode from './Pages/SelectGamemode';
 import JoinLobby from './Pages/JoinLobby';
+import Lobby from './Pages/Lobby';
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
         <Route exact path="/" component={HostOrJoin}/>
         <Route exact path="/create-lobby" component={SelectGamemode}/>
         <Route exact path="/join-lobby" component={JoinLobby}/>
+        <Route path="/lobby" component={Lobby}/>
       </BrowserRouter>
     </div>
   );

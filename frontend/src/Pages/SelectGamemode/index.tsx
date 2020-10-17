@@ -8,8 +8,10 @@ const SelectGamemode = () => {
 
   const createLobby = async() => {
     const url = process.env.REACT_APP_API_URL+"/api/lobby/new";
-    const reponse = await axios.post(url, {game: "secret"}, {headers: { 'Content-Type': "application/json"}})
-    console.log("reponse", reponse)
+    const response = await axios.post(url, {game: "secret"}, {headers: { 'Content-Type': "application/json"}})
+    if(response.status===200){
+      history.push('/lobby/'+response.data.join_code);
+    }
   }
 
   return (
