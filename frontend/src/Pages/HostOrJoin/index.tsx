@@ -8,7 +8,7 @@ const HostOrJoin = () => {
     <>
       <div style={{padding: "3rem"}}>Welcome boiii</div>
       <div style={{margin: "2rem"}}><button onClick={() => history.push("/create-lobby")}>Host game</button></div>
-      <div style={{margin: "2rem"}}><button onClick={() => console.log("join game boioii")}>Join game</button></div>
+      <div style={{margin: "2rem"}}><button onClick={() => history.push("/join-lobby")}>Join game</button></div>
     </>
   );
 }
