@@ -42,10 +42,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/express", "npm:4.17.8"],
             ["@types/node", "npm:14.11.10"],
             ["@types/react", "npm:16.9.53"],
+            ["@types/ws", "npm:7.2.7"],
             ["body-parser", "npm:1.19.0"],
             ["cors", "npm:2.8.5"],
             ["express", "npm:4.17.1"],
-            ["typescript", "patch:typescript@npm%3A4.0.3#builtin<compat/typescript>::version=4.0.3&hash=5bf698"]
+            ["typescript", "patch:typescript@npm%3A4.0.3#builtin<compat/typescript>::version=4.0.3&hash=5bf698"],
+            ["ws", "virtual:f5126a6c59718fab632a5fe9c89dad727d14c0854924da0278c36945a50e100550614ee30506e48e5221c7c36dc5ebab4a104a63756e8b71f6e37453259fec8c#npm:7.3.1"]
           ],
           "linkType": "SOFT",
         }]
@@ -173,6 +175,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["@types/ws", [
+        ["npm:7.2.7", {
+          "packageLocation": "./.yarn/cache/@types-ws-npm-7.2.7-f4395e2dd8-9e98599fe5.zip/node_modules/@types/ws/",
+          "packageDependencies": [
+            ["@types/ws", "npm:7.2.7"],
+            ["@types/node", "npm:14.11.10"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["accepts", [
         ["npm:1.3.7", {
           "packageLocation": "./.yarn/cache/accepts-npm-1.3.7-0dc9de65aa-2686fa30db.zip/node_modules/accepts/",
@@ -203,10 +215,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/express", "npm:4.17.8"],
             ["@types/node", "npm:14.11.10"],
             ["@types/react", "npm:16.9.53"],
+            ["@types/ws", "npm:7.2.7"],
             ["body-parser", "npm:1.19.0"],
             ["cors", "npm:2.8.5"],
             ["express", "npm:4.17.1"],
-            ["typescript", "patch:typescript@npm%3A4.0.3#builtin<compat/typescript>::version=4.0.3&hash=5bf698"]
+            ["typescript", "patch:typescript@npm%3A4.0.3#builtin<compat/typescript>::version=4.0.3&hash=5bf698"],
+            ["ws", "virtual:f5126a6c59718fab632a5fe9c89dad727d14c0854924da0278c36945a50e100550614ee30506e48e5221c7c36dc5ebab4a104a63756e8b71f6e37453259fec8c#npm:7.3.1"]
           ],
           "linkType": "SOFT",
         }]
@@ -780,6 +794,25 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/vary-npm-1.1.2-b49f70ae63-591f059f72.zip/node_modules/vary/",
           "packageDependencies": [
             ["vary", "npm:1.1.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["ws", [
+        ["virtual:f5126a6c59718fab632a5fe9c89dad727d14c0854924da0278c36945a50e100550614ee30506e48e5221c7c36dc5ebab4a104a63756e8b71f6e37453259fec8c#npm:7.3.1", {
+          "packageLocation": "./.yarn/$$virtual/ws-virtual-08a7c60b92/0/cache/ws-npm-7.3.1-0fa30fe373-9302f1f665.zip/node_modules/ws/",
+          "packageDependencies": [
+            ["ws", "virtual:f5126a6c59718fab632a5fe9c89dad727d14c0854924da0278c36945a50e100550614ee30506e48e5221c7c36dc5ebab4a104a63756e8b71f6e37453259fec8c#npm:7.3.1"],
+            ["@types/bufferutil", null],
+            ["@types/utf-8-validate", null],
+            ["bufferutil", null],
+            ["utf-8-validate", null]
+          ],
+          "packagePeers": [
+            "@types/bufferutil",
+            "@types/utf-8-validate",
+            "bufferutil",
+            "utf-8-validate"
           ],
           "linkType": "HARD",
         }]
