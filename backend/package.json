@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "main": "index.tsx",
   "scripts": {
-    "build": "yarn tsc --outDir ./build",
-    "start": "yarn node ./build/index.js"
+    "build": "tsc -p ./src --outDir ./build",
+    "start": "node ./build/index.js"
   },
   "license": "MIT",
   "devDependencies": {
