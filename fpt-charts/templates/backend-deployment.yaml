@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fpt-backend
+  labels:
+    app: fpt-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fpt-backend
+  template:
+    metadata:
+      labels:
+        app: fpt-backend
+    spec:
+      containers:
+      - name: fpt-backend
+        image: docker.io/fpt/fpt-backend:dev
+        ports:
+          - name: http
+            containerPort: 8080
