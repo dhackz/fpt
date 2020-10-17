@@ -49,3 +49,6 @@ Delete pods whenever you load a new version of a container:
 `kubectl delete pods -l app=fpt-frontend`
 or
 `kubectl delete pods -l app=fpt-backend`
+
+Upgrade development helm installation when helm charts are updated:
+`helm upgrade --devel fpt ./fpt-charts`
