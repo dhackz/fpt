@@ -6,7 +6,7 @@ var jsonParser = bodyParser.json()
  
 import {createLobby, joinLobby} from "./lobby/session";
 
-app.get('/api/status', (req,res) => { res.end() })
+app.get('/api/status', (req,res) => { res.end("OK") })
 
 app.post('/api/lobby/new', jsonParser, (req, res) => {
     var response = createLobby(req.body);
