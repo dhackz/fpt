@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fpt-frontend
+  labels:
+    app: fpt-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fpt-frontend
+  template:
+    metadata:
+      labels:
+        app: fpt-frontend
+    spec:
+      containers:
+      - name: fpt-frontend
+        image: fpt/fpt-frontend:dev
+        ports:
+          - name: http
+            containerPort: 80
