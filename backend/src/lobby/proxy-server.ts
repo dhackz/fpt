@@ -4,56 +4,75 @@ import { sessions } from "./session";
 
 const wss = new WebSocket.Server({ port:8080 })
 
-wss.on('open', (req,res) => {
-    console.log('Game connection server!');
-})
-
-wss.on('connection', (ws,req) => {
-    // Connection is either:
-    // 1. game server registering endpoint for sessionId.
-    // 2. client to registering to sessionId.
-    //
-    // if 1), register game server as available, respond with ready state?
-    // if 2), check if session exists and join client to server. Notify server.
-    //
-    // Url is the only way to send data in the connection setup so that is what
-    // we will use...
-    const args = req.url.split('&');
-
-    if (args.length != 2) {
-        console.log(`Wrong number of arguments during connection! Expect url 
-                    "to be of the form url:8080/sessionId&isClientOrServer`)
-    } else {
-        ws.close();
+function gameServerUpdate(ws, message) {
+    if (!sessions.hasOwnProperty(message.sessionid)) {
+        ws.send("No such sessionId exists!");
+        return;
     }
-
-    let sessionId = args[0];
-    let isClientOrServer = args[1];
 
     // There should already be a valid session.
-    let session = sessions[sessionId];
+    let session = sessions[message.sessionId];
 
-    console.log("New connection established!")
+    switch (message.action) {
+        case 'register':
 
-    switch (isClientOrServer) {
-        case "client":
-            //session.users.append(ws)
-            ws.send("Game client have been registered yo.")
+            session.players[message.userName] = ws;
             break;
-        case "server":
-            //session.server = ws;
-            ws.send("Game server have been registered yo.")
+        case 'sendAll':
+            break;
+        case 'sendTo':
             break;
         default:
-            console.log(sessionId)
-            console.log(isClientOrServer)
-            console.log("Something have been done goofed yo.")
-            break;
+            console.log('Invalid action! Closing socket.')
+            ws.send('Invalid action! Closing socket.')
+            ws.close()
+            break
     }
+}
+
+function gameClientUpdate(ws, message) {
+    if (!sessions.hasOwnProperty(message.sessionid)) {
+        ws.send("No such sessionId exists!");
+        return;
+    }
+
+    // There should already be a valid session.
+    let session = sessions[message.sessionId];
+
+    switch (message.action) {
+        case 'register':
+            session.socket = ws;
+            break;
+        case 'sendAll':
+            break;
+        case 'sendTo':
+            break;
+        default:
+            console.log('Invalid action! Closing socket.')
+            ws.send('Invalid action! Closing socket.')
+            ws.close()
+            break
+    }
+}
+
+wss.on('connection', (ws,req) => {
+    console.log('New client connected!')
+
+    ws.on('message', (data: string) => {
+        console.log(data)
+
+        //TODO(dawidstrom): validate JSON data format.
+        var message = JSON.parse(data);
+
+        if (message.actor == "client") {
+            gameClientUpdate(ws, message);
+        } else if (message.actor == "server") {
+            gameServerUpdate(ws, message);
+        } else {
+            console.log("Who tf is this?")
+        }
+
+        console.log("New connection established!");
+    })
 })
 
-// The socket server don't know about the server 
-wss.on('message', (data) => {
-    console.log("Messages not supported yet, check back in next version.")
-    console.log(data)
-})

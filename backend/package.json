@@ -5,7 +5,8 @@
   "scripts": {
     "build": "tsc -p ./src --outDir ./build",
     "start": "node ./build/index.js",
-    "proxy": "node ./build/lobby/proxy-server.js"
+    "proxy": "node ./build/lobby/proxy-server.js",
+    "client": "node ./build/lobby/client.js"
   },
   "license": "MIT",
   "devDependencies": {
