@@ -1,4 +1,5 @@
 FROM node:alpine as fpt-backend
+STOPSIGNAL SIGKILL
 RUN adduser -H -D fpt
 COPY . /opt/backend
 RUN chown -R fpt:fpt /opt/backend
