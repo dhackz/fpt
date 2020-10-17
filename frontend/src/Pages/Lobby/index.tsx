@@ -1,13 +1,16 @@
 
-import React, { useState } from 'react';
-import { useHistory } from "react-router-dom";
+import React, { useEffect } from 'react';
 import axios from 'axios'
 
+import useRoleState from "../../hooks/useRoleState";
+
 const Lobby = () => {
-  const history = useHistory();
   const joinCode = window.location.pathname.split("/")[2];
 
-  const [players, setPlayers] = useState([]);
+  const {role} = useRoleState()
+
+
+  useEffect(()=>{console.log("role", role)},[role])
 
   const startGame = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
@@ -24,7 +27,9 @@ const Lobby = () => {
     <>
         <div>Welcome to the lobby</div>
         <div>To join, enter code: {joinCode}</div>
-        <button onClick={startGame}>Start</button>
+        {role === "host" ? <button onClick={startGame}>Start game</button> : <div>Waiting for host to start game...</div> }
+        
+
     </>
   );
 }
