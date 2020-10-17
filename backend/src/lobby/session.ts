@@ -66,4 +66,4 @@ var joinLobby = (json) => {
     }
 
 }
-export {session, createLobby, joinLobby};
+export {sessions, createLobby, joinLobby};
