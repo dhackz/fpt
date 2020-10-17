@@ -31,6 +31,7 @@ var createLobby = (json) => {
         'join_code': join_code,
     };
 }
+
 var uniquePlayerName = (original_name, players) => {
     var name = original_name;
     while(players.includes(name)){
@@ -65,4 +66,4 @@ var joinLobby = (json) => {
     }
 
 }
-export {createLobby, joinLobby};
+export {session, createLobby, joinLobby};
