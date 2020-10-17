@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: fpt-backend
-        image: docker.io/fpt/fpt-backend:dev
+        image: fpt/fpt-backend:dev
         ports:
           - name: http
             containerPort: 8080
