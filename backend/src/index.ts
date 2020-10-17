@@ -4,13 +4,19 @@ var app = express();
  
 var jsonParser = bodyParser.json()
  
-import createLobby from "./lobby/session";
+import {createLobby, joinLobby} from "./lobby/session";
 
-app.post('/lobby/new', jsonParser, (req, res) => {
-    console.log(req.body);
+app.get('/api/status', (req,res) => { res.end() })
+
+app.post('/api/lobby/new', jsonParser, (req, res) => {
     var response = createLobby(req.body);
     res.end(JSON.stringify(response));
 });
+
+app.post('/api/lobby/join', jsonParser, (req, res) => {
+    var response = joinLobby(req.body);
+    res.end(JSON.stringify(response))
+})
 
 var server = app.listen(8080, function () {
     var host = server.address().address;
