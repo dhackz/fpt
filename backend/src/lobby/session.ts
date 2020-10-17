@@ -31,20 +31,24 @@ var createLobby = (json) => {
         'join_code': join_code,
     };
 }
-
+var uniquePlayerName = (original_name, players) => {
+    var name = original_name;
+    while(players.includes(name)){
+        var suffix_counter = suffix_counter? suffix_counter+1 : 2;
+        name = original_name + suffix_counter;
+    }
+    return name;
+}
 var joinLobby = (json) => {
     if(lobbies[json.join_code]) {
         if(json.name) {
             var session_id = lobbies[json.join_code].id
-            var session = sessions[session_id]
-            if(!session) {
+            if(!session_id) {
                 return {'error': "NO_SUCH_LOBBY"}
             }
-            var name = json.name
-            while(Object.keys(session.players).includes(name)){
-                var suffix_counter = suffix_counter? suffix_counter+1 : 2;
-                name = json.name + suffix_counter;
-            }
+            var session = sessions[session_id]
+
+            var name = uniquePlayerName(json.name, Object.keys(session.players))
             session.players[name] = "socket:for:"+name
             console.log("Player %s joined, %d in lobby %s", name, Object.keys(session.players).length, json.join_code);
             return {
