@@ -1,12 +1,23 @@
-gemgemgem <- an awesome project!
+# gemgemgem <- an awesome project!
 
-Install KIND:
+
+
+## Getting started
+
+### Install KIND:
+
 `https://kind.sigs.k8s.io/docs/user/quick-start/`
 
-Install kubectl:
+### Install kubectl:
+
 `https://kubernetes.io/docs/tasks/tools/install-kubectl/`
 
-Create kind cluster with a node configured to expose prot 80 and 443:
+### Install helm:
+
+`https://github.com/helm/helm/releases`
+
+
+### Create kind cluster with ingress config:
 
 ```
 cat <<EOF | kind create cluster --config=-
@@ -30,25 +41,14 @@ nodes:
 EOF
 ```
 
-Install nginx ingress to the cluster:
+
+### Install nginx ingress to the cluster:
 `kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml`
 
-Build docker images and load them into kind:
 
-```
-docker build backend --tag fpt/fpt-backend:dev
-docker build frontend --tag fpt/fpt-frontend:dev
-kind load docker-image fpt/fpt-backend:dev
-kind load docker-image fpt/fpt-frontend:dev
-```
-
-Install helm charts:
-`helm install fpt ./fpt-charts`
-
-Delete pods whenever you load a new version of a container:
-`kubectl delete pods -l app=fpt-frontend`
-or
-`kubectl delete pods -l app=fpt-backend`
-
-Upgrade development helm installation when helm charts are updated:
-`helm upgrade --devel fpt ./fpt-charts`
+### Make commands for KIND:
+- `install` build containers and install helm charts
+- `uninstall` uninstall helm charts
+- `frontend` build frontend and tag with fpt/fpt-frontend:dev
+- `backend` build backend and tag with fpt/fpt-backend:dev
+- `load` load fpt/fpt-frontend:dev and fpt/fpt-backend:dev into kind.
