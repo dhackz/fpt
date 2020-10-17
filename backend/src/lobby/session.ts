@@ -1,20 +1,20 @@
-var crypto = require("crypto");
+let crypto = require("crypto");
 const sessions = {};
 const lobbies = {};
-var counter = 1;
+let counter = 1;
 
-var createLobby = (json) => {
-    var id = crypto.createHash("sha256")
+let createLobby = (json) => {
+    let id = crypto.createHash("sha256")
                    .update(""+counter)
                    .digest("base64");
     counter += 1;
 
-    var join_code = id.replace("/", "")
+    let join_code = id.replace("/", "")
                       .replace("=", "")
                       .replace("+", "")
                       .substring(0,4);
 
-    var socket = 'socket:of:doom';
+    let socket = 'socket:of:doom';
 
     sessions[id] = {
         "game" : json.game,
@@ -32,7 +32,7 @@ var createLobby = (json) => {
     };
 }
 
-var uniquePlayerName = (original_name, players) => {
+let uniquePlayerName = (original_name, players) => {
     var name = original_name;
     while(players.includes(name)){
         var suffix_counter = suffix_counter? suffix_counter+1 : 2;
@@ -40,16 +40,16 @@ var uniquePlayerName = (original_name, players) => {
     }
     return name;
 }
-var joinLobby = (json) => {
+let joinLobby = (json) => {
     if(lobbies[json.join_code]) {
         if(json.name) {
-            var session_id = lobbies[json.join_code].id
+            let session_id = lobbies[json.join_code].id
             if(!session_id) {
                 return {'error': "NO_SUCH_LOBBY"}
             }
-            var session = sessions[session_id]
+            let session = sessions[session_id]
 
-            var name = uniquePlayerName(json.name, Object.keys(session.players))
+            let name = uniquePlayerName(json.name, Object.keys(session.players))
             session.players[name] = "socket:for:"+name
             console.log("Player %s joined, %d in lobby %s", name, Object.keys(session.players).length, json.join_code);
             return {
@@ -64,6 +64,15 @@ var joinLobby = (json) => {
     } else {
         return {'error': 'NO_SESSION_FOUND'}
     }
-
 }
-export {sessions, createLobby, joinLobby};
+
+let startGame = (json) => {
+    if(json.join_code) {
+        console.log("Game %s is starting", json.join_code);
+        return {
+            ok: delete lobbies[json.join_code]
+        }
+    }
+    return { ok: false }
+}
+export {sessions, createLobby, joinLobby, startGame};
