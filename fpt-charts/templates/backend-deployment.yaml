@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: fpt-backend
-        image: fpt/fpt-backend:dev
+        image: {{ .Values.backend.image | quote }}
         ports:
           - name: http
             containerPort: 8080
