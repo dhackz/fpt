@@ -37,9 +37,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         [null, {
           "packageLocation": "./",
           "packageDependencies": [
+            ["@types/body-parser", "npm:1.19.0"],
             ["@types/express", "npm:4.17.8"],
             ["@types/node", "npm:14.11.10"],
             ["@types/react", "npm:16.9.53"],
+            ["body-parser", "npm:1.19.0"],
             ["express", "npm:4.17.1"],
             ["typescript", "patch:typescript@npm%3A4.0.3#builtin<compat/typescript>::version=4.0.3&hash=5bf698"]
           ],
@@ -184,9 +186,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",
           "packageDependencies": [
             ["backend", "workspace:."],
+            ["@types/body-parser", "npm:1.19.0"],
             ["@types/express", "npm:4.17.8"],
             ["@types/node", "npm:14.11.10"],
             ["@types/react", "npm:16.9.53"],
+            ["body-parser", "npm:1.19.0"],
             ["express", "npm:4.17.1"],
             ["typescript", "patch:typescript@npm%3A4.0.3#builtin<compat/typescript>::version=4.0.3&hash=5bf698"]
           ],

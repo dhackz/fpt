@@ -1,12 +1,14 @@
 var express = require('express');
-var app = express();
+var bodyParser = require('body-parser')
+var app = express(); 
+ 
+var jsonParser = bodyParser.json()
+ 
+import createLobby from "./lobby/session";
 
-app.post('/lobby/new', function (req, res) {
-    console.log('yooo');
-    var response = {
-        'lobby_id': '1d1d',
-        'socket_info': 'socket:of:doom',
-    };
+app.post('/lobby/new', jsonParser, (req, res) => {
+    console.log(req.body);
+    var response = createLobby(req.body);
     res.end(JSON.stringify(response));
 });
 
