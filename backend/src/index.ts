@@ -1,27 +1,30 @@
-var express = require('express');
-var cors = require('cors');
-var bodyParser = require('body-parser')
-var app = express(); 
-app.use(cors());
+let express = require('express');
+let bodyParser = require('body-parser')
+let app = express();
  
-var jsonParser = bodyParser.json()
+let jsonParser = bodyParser.json()
  
-import {createLobby, joinLobby} from "./lobby/session";
+import {createLobby, joinLobby, startGame} from "./lobby/session";
 
 app.get('/api/status', (req,res) => { res.end("OK") })
 
 app.post('/api/lobby/new', jsonParser, (req, res) => {
-    var response = createLobby(req.body);
+    let response = createLobby(req.body);
     res.end(JSON.stringify(response));
 });
 
 app.post('/api/lobby/join', jsonParser, (req, res) => {
-    var response = joinLobby(req.body);
+    let response = joinLobby(req.body);
     res.end(JSON.stringify(response))
 })
 
-var server = app.listen(8080, function () {
-    var host = server.address().address;
-    var port = server.address().port;
+app.post('/api/lobby/start', jsonParser, (req, res) => {
+    let response = startGame(req.body);
+    res.end(JSON.stringify(response))
+})
+
+let server = app.listen(8080, function () {
+    let host = server.address().address;
+    let port = server.address().port;
     console.log('App listening at http://%s:%s', host, port);
 });
