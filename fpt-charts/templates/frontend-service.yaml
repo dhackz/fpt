@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: fpt-frontend-svc
+  labels:
+    app: fpt-frontend
+spec:
+  ports:
+  - port: 80
+    targetPort: http
+    name: http
+  selector:
+    app: fpt-frontend
+
