@@ -38,10 +38,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",
           "packageDependencies": [
             ["@types/body-parser", "npm:1.19.0"],
+            ["@types/cors", "npm:2.8.8"],
             ["@types/express", "npm:4.17.8"],
             ["@types/node", "npm:14.11.10"],
             ["@types/react", "npm:16.9.53"],
             ["body-parser", "npm:1.19.0"],
+            ["cors", "npm:2.8.5"],
             ["express", "npm:4.17.1"],
             ["typescript", "patch:typescript@npm%3A4.0.3#builtin<compat/typescript>::version=4.0.3&hash=5bf698"]
           ],
@@ -65,6 +67,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@types/connect", "npm:3.4.33"],
             ["@types/node", "npm:14.11.10"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@types/cors", [
+        ["npm:2.8.8", {
+          "packageLocation": "./.yarn/cache/@types-cors-npm-2.8.8-94412f1883-4a11dd4d1e.zip/node_modules/@types/cors/",
+          "packageDependencies": [
+            ["@types/cors", "npm:2.8.8"],
+            ["@types/express", "npm:4.17.8"]
           ],
           "linkType": "HARD",
         }]
@@ -187,10 +199,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["backend", "workspace:."],
             ["@types/body-parser", "npm:1.19.0"],
+            ["@types/cors", "npm:2.8.8"],
             ["@types/express", "npm:4.17.8"],
             ["@types/node", "npm:14.11.10"],
             ["@types/react", "npm:16.9.53"],
             ["body-parser", "npm:1.19.0"],
+            ["cors", "npm:2.8.5"],
             ["express", "npm:4.17.1"],
             ["typescript", "patch:typescript@npm%3A4.0.3#builtin<compat/typescript>::version=4.0.3&hash=5bf698"]
           ],
@@ -258,6 +272,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/cookie-signature-npm-1.0.6-93f325f7f0-305054e102.zip/node_modules/cookie-signature/",
           "packageDependencies": [
             ["cookie-signature", "npm:1.0.6"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["cors", [
+        ["npm:2.8.5", {
+          "packageLocation": "./.yarn/cache/cors-npm-2.8.5-c9935a2d12-c83e88c154.zip/node_modules/cors/",
+          "packageDependencies": [
+            ["cors", "npm:2.8.5"],
+            ["object-assign", "npm:4.1.1"],
+            ["vary", "npm:1.1.2"]
           ],
           "linkType": "HARD",
         }]
@@ -549,6 +574,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/negotiator-npm-0.6.2-ba538e167a-4b230bd15f.zip/node_modules/negotiator/",
           "packageDependencies": [
             ["negotiator", "npm:0.6.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["object-assign", [
+        ["npm:4.1.1", {
+          "packageLocation": "./.yarn/cache/object-assign-npm-4.1.1-1004ad6dec-66cf021898.zip/node_modules/object-assign/",
+          "packageDependencies": [
+            ["object-assign", "npm:4.1.1"]
           ],
           "linkType": "HARD",
         }]
