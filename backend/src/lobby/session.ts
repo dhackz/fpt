@@ -2,6 +2,42 @@ let crypto = require("crypto");
 const sessions = {};
 const lobbies = {};
 let counter = 1;
+let redis, rsub, rpub;
+
+let initSessionHandler = (r, s, p) => {
+    redis = r;
+    rsub = s;
+    rpub = p;
+    rsub.on("message", handleMessageBus);
+}
+
+let handleJoinLobby = (sessionId, playerName) => {
+    let sessionKey = "session:" + sessionId;
+    let playersKey = sessionKey + ":players"
+    console.log(playersKey);
+    return redis.llen(playersKey).then((numPlayers) =>{
+        console.log(numPlayers, typeof(numPlayers));
+        if (numPlayers < 4) {
+            redis.lpush(playersKey, playerName);
+            return "OK " + playerName;
+        } else {
+            return "DENY " + playerName;
+        }
+    }).catch((error) => {return "DENY " + playerName;});
+}
+
+let handleMessageBus = (channel, message) => {
+    console.log("Received message %s from channel %s", message, channel)
+    let [_session, sessionId, _channels, to] = channel.split(":"); 
+    let [request, data] = message.split(" ");
+    console.log(sessionId, to, request, data)
+    switch (request) {
+        case "JOIN":
+            handleJoinLobby(sessionId, data).then((response) => {
+                rpub.publish("session:" + sessionId + ":channels:clients", response);
+            });
+    }
+}
 
 let getSessionIdFromLobbyId = (lobbyId, redis) => {
     if (!(lobbyId in lobbies)) {
@@ -86,11 +122,12 @@ let joinLobby = (json, redis, rsub, rpub) => {
         let name = uniquePlayerName(json.name, Object.keys(session.players))
         console.log("Player %s joined, %d in lobby %s", name, Object.keys(session.players).length, json.joinCode);
         let sessionKey = "session:" + session_id;
+
         rsub.subscribe(sessionKey + ":channels:clients", (err, count) => {
-            console.log("err: " + err)
-            console.log("count: " + count)
+            console.log("err: " + err);
+            console.log("count: " + count);
         });
-        let joinMessage = "JOIN: " + name
+        let joinMessage = "JOIN " + name
         rpub.publish(sessionKey + ":channels:server", joinMessage);
         return {
             session_id,
@@ -111,4 +148,4 @@ let startGame = (json, redis) => {
     }
     return { ok: false }
 }
-export {sessions, createLobby, joinLobby, startGame};
+export {sessions, initSessionHandler, createLobby, joinLobby, startGame, handleMessageBus};
