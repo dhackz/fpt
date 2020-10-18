@@ -3,13 +3,13 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import RoleContext from "./contexts/RoleContext/context";
+import GameContext from "./contexts/GameContext/context";
 
 ReactDOM.render(
   <React.StrictMode>
-    <RoleContext.Provider value={undefined}>
+    <GameContext.Provider value={undefined}>
       <App />
-    </RoleContext.Provider>
+    </GameContext.Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

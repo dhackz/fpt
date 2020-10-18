@@ -6,3 +6,7 @@ services:
     network_mode: host
     volumes:
       - "./conf:/etc/nginx/conf.d"
+  redis-primary:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
