@@ -3,4 +3,4 @@ backend:
 frontend:
   image: fpt/fpt-frontend:dev
 redis:
-  image: redis:3.2.0-alpine
+  image: redis:alpine
