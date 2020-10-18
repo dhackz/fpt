@@ -14,11 +14,9 @@ let createLobby = (json) => {
                       .replace("+", "")
                       .substring(0,4);
 
-    let socket = 'socket:of:doom';
 
     sessions[id] = {
         "game" : json.game,
-        "socket" : socket,
         "players" : {}
     }
     lobbies[join_code] = {
@@ -27,7 +25,6 @@ let createLobby = (json) => {
 
     return {
         'session_id': id,
-        'socket_info': socket,
         'join_code': join_code,
     };
 }
@@ -50,11 +47,9 @@ let joinLobby = (json) => {
             let session = sessions[session_id]
 
             let name = uniquePlayerName(json.name, Object.keys(session.players))
-            session.players[name] = "socket:for:"+name
             console.log("Player %s joined, %d in lobby %s", name, Object.keys(session.players).length, json.join_code);
             return {
                 session_id,
-                'socket_info': session.socket,
                 'players': Object.keys(session.players),
                 'player_name': name
             }
