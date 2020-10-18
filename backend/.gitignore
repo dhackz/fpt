@@ -12,3 +12,6 @@ tsbuildinfo.ignore
 
 # Webpack Plugins
 node_modules/
+
+# Vim shit
+.*.swp

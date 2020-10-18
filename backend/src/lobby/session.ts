@@ -3,7 +3,7 @@ const sessions = {};
 const lobbies = {};
 let counter = 1;
 
-let createLobby = (json, redis) => {
+let createLobby = (json, redis, rsub) => {
     let sessionId = crypto.createHash("sha256")
                    .update(""+counter)
                    .digest("base64");
@@ -20,8 +20,14 @@ let createLobby = (json, redis) => {
     redis.set(gameKey, json.game);
 
     let lobbyKey    = "lobby:" + lobbyId;
-    redis.set(lobbyKey, sessionId);
-    redis.lpush("sessions", sessionId);
+    redis.set(lobbyKey, sessionId, (err, count) => {
+        console.log("err: " + err)
+        console.log("count: " + count)
+    });
+    redis.lpush("sessions", sessionId, (err, count) => {
+        console.log("err: " + err)
+        console.log("count: " + count)
+    });
 
     sessions[sessionId] = {
         "game": json.game,
@@ -31,6 +37,11 @@ let createLobby = (json, redis) => {
     lobbies[lobbyId] = {
         "id": sessionId,
     }
+
+    rsub.subscribe(sessionKey + ":channels:server", (err, count) => {
+        console.log("err: " + err)
+        console.log("count: " + count)
+    });
 
     return {
         'session_id': sessionId,

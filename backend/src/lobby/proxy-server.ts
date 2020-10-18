@@ -3,21 +3,21 @@ import * as WebSocket from 'ws';
 
 import { sessions } from "./session";
 
-let createProxy = (tedis) => {
+let createProxy = (redis) => {
     const wss = new WebSocket.Server({ port:8081 })
 
     async function gameServerUpdate(ws, message) {
-        if (await tedis.exists('session:'+message.sessionId)) {
+        if (await redis.exists('session:'+message.sessionId)) {
             const error = "No such sessionId exists: " + message.sessionId;
             ws.send(JSON.stringify({error}));
             console.log(sessions);
             return;
-        } else {
-            console.log("found session..");
         }
 
+        console.log("found session..");
+
         // There should already be a valid session.
-        let session = await tedis.get('session:'+message.sessionId);
+        let session = await redis.get('session:'+message.sessionId);
         console.log(session);
         switch (message.action) {
             case 'register':
@@ -36,15 +36,17 @@ let createProxy = (tedis) => {
     }
 
     async function gameClientUpdate(ws: WebSocket, message) {
-        if (await tedis.exists('session:'+message.sessionId)) {
+        if (await redis.exists('session:'+message.sessionId)) {
             const error = "No such sessionId exists: " + message.sessionId
             ws.send(JSON.stringify({error}));
             console.log(sessions);
             return;
         }
 
+        console.log("found session..");
+
         // There should already be a valid session.
-        let session = await tedis.get('session:'+message.sessionId);
+        let session = await redis.get('session:'+message.sessionId);
         console.log(session);
         switch (message.action) {
             case 'register':
