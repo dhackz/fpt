@@ -11,7 +11,7 @@ function getEnvironmentVar(varname, defaultvalue)
 
 const redis = new Redis(
   6379,
-  getEnvironmentVar("TEDIS_HOST", "127.0.0.1")
+  getEnvironmentVar("REDIS_HOST", "127.0.0.1")
 );
 
 
