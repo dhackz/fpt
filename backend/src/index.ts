@@ -26,10 +26,12 @@ rsub.on("message", (channel, message) => {
 });
 
 
-
+let http = require('http');
 let express = require('express');
 let bodyParser = require('body-parser')
+
 let app = express();
+let server = http.createServer(app); // Connect express routes to server.
  
 let jsonParser = bodyParser.json()
  
@@ -54,10 +56,10 @@ app.post('/api/lobby/start', jsonParser, (req, res) => {
 })
 
 // Start the proxy server.
-createProxy(redis)
+createProxy(server, redis)
 
-let server = app.listen(8080, function () {
+server.listen(8080, () => {
     let host = server.address().address;
     let port = server.address().port;
     console.log('App listening at http://%s:%s', host, port);
-});
+})
