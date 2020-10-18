@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-primary
+  labels:
+    app: redis-primary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-primary
+  template:
+    metadata:
+      labels:
+        app: redis-primary
+    spec:
+      containers:
+      - name: redis-primary
+        image: {{ .Values.image | quote }}
+        command:
+          - redis-server
+        args:
+          - "--protected-mode"
+          - "no"
+        ports:
+          - name: redis
+            containerPort: 6379

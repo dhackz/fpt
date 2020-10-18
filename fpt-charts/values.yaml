@@ -1,0 +1,6 @@
+backend:
+  image: fpt/fpt-backend:dev
+frontend:
+  image: fpt/fpt-frontend:dev
+redis:
+  image: redis:alpine
