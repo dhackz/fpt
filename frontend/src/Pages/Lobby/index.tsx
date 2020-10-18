@@ -26,7 +26,7 @@ const Lobby = () => {
   };
 
   useEffect(() => {
-    const ws: Sockette = new Sockette('ws://localhost:8081' , {
+    const ws: Sockette = new Sockette('ws://localhost:8080' , {
       timeout: 5e3,
       maxAttempts: 10,
       onopen: (e: Event) => () => {
