@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import GameContext from "./contexts/GameContext/context";
+import GameContext from './contexts/GameContext/context';
 
 ReactDOM.render(
   <React.StrictMode>
