@@ -44,7 +44,7 @@ app.post('/api/lobby/new', jsonParser, (req, res) => {
 });
 
 app.post('/api/lobby/join', jsonParser, (req, res) => {
-    let response = joinLobby(req.body, redis);
+    let response = joinLobby(req.body, redis, rsub, rpub);
     res.end(JSON.stringify(response))
 })
 
