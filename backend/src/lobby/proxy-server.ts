@@ -3,8 +3,8 @@ import * as WebSocket from 'ws';
 
 import { sessions } from "./session";
 
-let createProxy = (redis) => {
-    const wss = new WebSocket.Server({ port:8081 })
+let createProxy = (server, redis) => {
+    const wss = new WebSocket.Server({server});
 
     async function gameServerUpdate(ws, message) {
         if (await redis.exists('session:'+message.sessionId)) {
