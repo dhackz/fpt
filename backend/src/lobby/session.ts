@@ -3,6 +3,23 @@ const sessions = {};
 const lobbies = {};
 let counter = 1;
 
+let getSessionIdFromLobbyId = (lobbyId, redis) => {
+    if (!(lobbyId in lobbies)) {
+        lobbies[lobbyId] = {"id": redis.get("lobby:"+ lobbyId)};
+    }
+    return lobbies[lobbyId].id;
+}
+
+let getSession = (sessionId, redis) => {
+    if (!(sessionId in sessions)) {
+        let sessionKey = "session:" + sessionId;
+        let players = redis.get(sessionKey + "players");
+        let game = redis.get(sessionKey + "game");
+        sessions[sessionId] = {"players": players, "game": game};
+    }
+    return sessions[sessionId];
+}
+
 let createLobby = (json, redis, rsub) => {
     let sessionId = crypto.createHash("sha256")
                    .update(""+counter)
@@ -57,27 +74,31 @@ let uniquePlayerName = (original_name, players) => {
     }
     return name;
 }
-let joinLobby = (json, redis) => {
-    if(lobbies[json.joinCode]) {
-        if(json.name) {
-            let session_id = lobbies[json.joinCode].id
-            if(!session_id) {
-                return {'error': "NO_SUCH_LOBBY"}
-            }
-            let session = sessions[session_id]
+let joinLobby = (json, redis, rsub, rpub) => {
+    console.log(json);
+    if(json.name) {
+        let session_id = getSessionIdFromLobbyId(json.joinCode, redis)
+        if(!session_id) {
+            return {'error': "NO_SUCH_LOBBY"}
+        }
+        let session = getSession(session_id, redis);
 
-            let name = uniquePlayerName(json.name, Object.keys(session.players))
-            console.log("Player %s joined, %d in lobby %s", name, Object.keys(session.players).length, json.joinCode);
-            return {
-                session_id,
-                'players': Object.keys(session.players),
-                'player_name': name
-            }
-        } else {
-            return {'error': "NO_NAME_PROVIDED"}
+        let name = uniquePlayerName(json.name, Object.keys(session.players))
+        console.log("Player %s joined, %d in lobby %s", name, Object.keys(session.players).length, json.joinCode);
+        let sessionKey = "session:" + session_id;
+        rsub.subscribe(sessionKey + ":channels:clients", (err, count) => {
+            console.log("err: " + err)
+            console.log("count: " + count)
+        });
+        let joinMessage = "JOIN: " + name
+        rpub.publish(sessionKey + ":channels:server", joinMessage);
+        return {
+            session_id,
+            'players': Object.keys(session.players),
+            'player_name': name
         }
     } else {
-        return {'error': 'NO_SESSION_FOUND'}
+        return {'error': "NO_NAME_PROVIDED"}
     }
 }
 
