@@ -19,7 +19,7 @@ const Lobby = () => {
     if(json.connected) {
       ws.json({
         actor: role,
-        message: 'register',
+        action: 'register',
         sessionId: session,
       })
     }
