@@ -1,12 +1,11 @@
-import { Socket } from 'dgram';
 import { createContext } from 'react';
 import Sockette from 'sockette';
 type GameContext = {
-  role: ("client" | "server");
+  role: 'client' | 'server';
   setUserRole: (newRole: string) => void;
-  socket: (Sockette | null);
+  socket: Sockette | null;
   setLobbySocket: (newSocket: Sockette) => void;
-  session: (String);
+  session: String;
   setSession: (newSession: String) => void;
 };
 
