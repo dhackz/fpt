@@ -5,20 +5,23 @@ import { sessions } from "./session";
 
 let createProxy = (server, redis) => {
     const wss = new WebSocket.Server({server});
+    const PROXY_NAME ="WebSocketServer";
 
     async function gameServerUpdate(ws, message) {
+        let FUNC_NAME="gameServerUpdate";
+
         if (await redis.exists('session:'+message.sessionId)) {
             const error = "No such sessionId exists: " + message.sessionId;
             ws.send(JSON.stringify({error}));
-            console.log(sessions);
+            console.log("%s(): sessions: %s", PROXY_NAME, FUNC_NAME, sessions);
             return;
         }
 
-        console.log("found session..");
+        console.log("%s: %s(): found session..", PROXY_NAME, FUNC_NAME);
 
         // There should already be a valid session.
         let session = await redis.get('session:'+message.sessionId);
-        console.log(session);
+        console.log("%s: %s(): session: %s", PROXY_NAME, FUNC_NAME, session);
         switch (message.action) {
             case 'register':
                 break;
@@ -28,7 +31,7 @@ let createProxy = (server, redis) => {
                 break;
             default:
                 const error = `Invalid action: ${message}! Closing socket.`;
-                console.log(error)
+                console.log("%s(): session: %s", PROXY_NAME, FUNC_NAME, session);
                 ws.send(JSON.stringify({error}));
                 ws.close()
                 break
@@ -36,6 +39,8 @@ let createProxy = (server, redis) => {
     }
 
     async function gameClientUpdate(ws: WebSocket, message) {
+        let FUNC_NAME="gameClientUpdate";
+
         if (await redis.exists('session:'+message.sessionId)) {
             const error = "No such sessionId exists: " + message.sessionId
             ws.send(JSON.stringify({error}));
@@ -43,7 +48,7 @@ let createProxy = (server, redis) => {
             return;
         }
 
-        console.log("found session..");
+        console.log("%s(): found session..", FUNC_NAME);
 
         // There should already be a valid session.
         let session = await redis.get('session:'+message.sessionId);
@@ -72,10 +77,12 @@ let createProxy = (server, redis) => {
 
 
     wss.on('connection', (ws,req) => {
-        console.log('New client connected!')
+        console.log('%s: New client connected!', PROXY_NAME)
         ws.send(JSON.stringify({connected:true}));
+
         ws.on('message', (data: string) => {
-            console.log(data)
+            let FUNC_NAME = "message";
+            console.log("%s: %s(): data: %s", PROXY_NAME, FUNC_NAME, data)
 
             //TODO(dawidstrom): validate JSON data format.
             var message = JSON.parse(data);
