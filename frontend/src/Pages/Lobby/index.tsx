@@ -1,18 +1,19 @@
-import React, { useEffect } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import Sockette from 'sockette';
+import axios from 'axios';
 import useGameState from '../../hooks/useGameState';
 import * as Styled from './styles';
 import Spinner from '../../Components/Spinner';
+import {newSocketListener} from '../../tools/socket';
 
 const Lobby = () => {
   const joinCode = window.location.pathname.split('/')[2];
-
-  const {role, setLobbySocket, session, players, setPlayersList, playerName, setPlayerName} = useGameState()
-
+  const {role, setLobbySocket, session, playerName, setPlayerName} = useGameState()
+  const [players, setPlayers] = useState<String[]>([]);
   const onMessage = (ws: Sockette, message: MessageEvent) => {
-    console.log(message.data);
+    message.preventDefault();
     const json = JSON.parse(message.data);
+    console.log("got a message!, ", json);
     if (json.error) {
       console.log('WebSocket error: %s', json.error);
       return;
@@ -24,14 +25,20 @@ const Lobby = () => {
         sessionId: session,
         name: playerName
       })
+      console.log("sending register to session");
     }
     if(json.message) {
+      console.log("we joined the game")
       if(json.message.playerName) {
-        setPlayerName(json.message.playerName);
+        setPlayerName(json.message.playerName); 
+        setPlayers([...players,json.message.playerName]);
       }
-      if(json.message.players) {
-        setPlayersList(json.message.players);
-      }
+    }
+    if(json.newPlayer) {
+      console.log("a new player joined: ", json.newPlayer);
+      console.log("players was: ", players);
+      console.log("all players are now: ", [...players, json.newPlayer ]);
+      setPlayers([...players, json.newPlayer ]);
     }
   };
 
@@ -56,8 +63,8 @@ const Lobby = () => {
       onerror: e => console.log('Error:', e)
     });
 
-    setLobbySocket(ws);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    newSocketListener(onMessage);
   }, []);
 
   const startGame = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {

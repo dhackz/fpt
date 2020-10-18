@@ -11,18 +11,9 @@ function getEnvironmentVar(varname, defaultvalue)
         return defaultvalue;
 }
 
-const redis = new Redis(
-  6379,
-  getEnvironmentVar("REDIS_HOST", "127.0.0.1")
-);
-const rpub = new Redis(
-  6379,
-  getEnvironmentVar("REDIS_HOST", "127.0.0.1")
-);
-const rsub = new Redis(
-  6379,
-  getEnvironmentVar("REDIS_HOST", "127.0.0.1")
-);
+const redis = new Redis(6379, getEnvironmentVar("REDIS_HOST", "127.0.0.1"));
+const rpub = new Redis(6379, getEnvironmentVar("REDIS_HOST", "127.0.0.1"));
+const rsub = new Redis(6379, getEnvironmentVar("REDIS_HOST", "127.0.0.1"));
 
 let http = require('http');
 let express = require('express');
@@ -30,13 +21,16 @@ let bodyParser = require('body-parser')
 
 let app = express();
 let server = http.createServer(app); // Connect express routes to server.
- 
-let jsonParser = bodyParser.json()
- 
-import {initSessionHandler, createLobby, joinLobby, startGame} from "./lobby/session";
-import {createProxy} from "./lobby/proxy-server";
 
-app.get('/api/status', (req,res) => { res.end("OK") })
+let jsonParser = bodyParser.json();
+
+import {
+  initSessionHandler,
+  createLobby,
+  joinLobby,
+  startGame,
+} from "./lobby/session";
+import { createProxy } from "./lobby/proxy-server";
 
 app.post('/api/lobby/new', jsonParser, (req, res) => {
     let response = createLobby(req.body, redis, rsub, log);

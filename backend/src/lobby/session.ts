@@ -1,9 +1,10 @@
-
+import { onChannelMessage, channelPusher } from "./proxy-server";
 let crypto = require("crypto");
 const sessions = {};
 const lobbies = {};
 let counter = 1;
 let redis, rsub, rpub;
+<<<<<<< HEAD
 let log;
 
 let redisHandler;
@@ -52,52 +53,82 @@ class RedisHandler {
     }
 }
 
-let handleJoinLobby = (sessionId, playerName) => {
-    redisHandler.numOfPlayers(sessionId).then((num) => {
-        log.debug("Number of players in lobby? " + num);
+let socketPusher = onChannelMessage;
 
-        if (num < 4) {
-            return redisHandler.addPlayer(sessionId, playerName);
-        } else {
-            return "DENY " + playerName;
-        }
+let initSessionHandler = (r, s, p) => {
+  redis = r;
+  rsub = s;
+  rpub = p;
+  channelPusher(rpub);
+  rsub.on("message", handleMessageBus);
+};
+
+let handleJoinLobby = (sessionId, playerName) => {
+  let sessionKey = "session:" + sessionId;
+  let playersKey = sessionKey + ":players";
+  console.log(playersKey);
+  return redis
+    .llen(playersKey)
+    .then((numPlayers) => {
+      console.log(numPlayers, typeof numPlayers);
+      if (numPlayers < 4) {
+        redis.lpush(playersKey, playerName);
+        return (
+          "OK " +
+          JSON.stringify({
+            type: "PJOIN",
+            message: playerName,
+          })
+        );
+      } else {
+        return "DENY " + playerName;
+      }
+    })
+    .catch((error) => {
+      return "DENY " + playerName;
     });
-}
+};
 
 let handleMessageBus = (channel, message) => {
-    log.info("Received message "+message+" from channel "+channel)
-    let [_session, sessionId, _channels, to] = channel.split(":"); 
-    let [request, data] = message.split(" ");
-    // log.debug(sessionId, to, request, data)
+  console.log("Received message %s from channel %s", message, channel);
+  let [_session, sessionId, _channels, to] = channel.split(":");
+  let [request, data] = message.split(" ");
+  console.log(sessionId, to, request, data);
+  if (to === "server") {
     switch (request) {
-        case "JOIN":
-            handleJoinLobby(sessionId, data);
-                // .then((response) => {
-                // rpub.publish("session:" + sessionId + ":channels:clients", response);
-            // });
+      case "JOIN":
+        handleJoinLobby(sessionId, data).then((response) => {
+          rpub.publish("session:" + sessionId + ":channels:clients", response);
+        });
     }
-}
+  } else {
+    switch (request) {
+      case "OK": // join OK
+        socketPusher(sessionId, data);
+    }
+  }
+};
 
 let getSessionIdFromLobbyId = (lobbyId: string, redis) => {
     if (!(lobbyId in lobbies)) {
         redis.get("lobby:"+ lobbyId).then((result) => {
             lobbies[lobbyId] = { id: result};
-            //return lobbies[lobbyId].id;
         });
     }
     return lobbies[lobbyId].id;
 }
 
 let getSession = (sessionId, redis) => {
-    if (!(sessionId in sessions)) {
-        let sessionKey = "session:" + sessionId;
-        let players = redis.get(sessionKey + "players");
-        let game = redis.get(sessionKey + "game");
-        sessions[sessionId] = {"players": players, "game": game};
-    }
-    return sessions[sessionId];
-}
+  if (!(sessionId in sessions)) {
+    let sessionKey = "session:" + sessionId;
+    let players = redis.get(sessionKey + "players");
+    let game = redis.get(sessionKey + "game");
+    sessions[sessionId] = { players: players, game: game };
+  }
+  return sessions[sessionId];
+};
 
+<<<<<<< HEAD
 let createLobby = (json, redis, rsub, log) => {
     const FUNC_NAME = "createLobby";
 
@@ -138,31 +169,29 @@ let createLobby = (json, redis, rsub, log) => {
         "players": {}
     }
 
-    lobbies[lobbyId] = {
-        "id": sessionId,
-    }
+  lobbies[lobbyId] = {
+    id: sessionId,
+  };
 
-    rsub.subscribe(sessionKey + ":channels:server", (err, count) => {
-        if (err) {
-            log.warn("err: " + err)
-            log.warn("count: " + count)
-        }
-    });
+  rsub.subscribe(sessionKey + ":channels:server", (err, count) => {
+    console.log("err: " + err);
+    console.log("count: " + count);
+  });
 
-    return {
-        'session_id': sessionId,
-        'join_code': lobbyId,
-    };
-}
+  return {
+    session_id: sessionId,
+    join_code: lobbyId,
+  };
+};
 
 let uniquePlayerName = (original_name, players) => {
-    var name = original_name;
-    while(players.includes(name)){
-        var suffix_counter = suffix_counter? suffix_counter+1 : 2;
-        name = original_name + suffix_counter;
-    }
-    return name;
-}
+  var name = original_name;
+  while (players.includes(name)) {
+    var suffix_counter = suffix_counter ? suffix_counter + 1 : 2;
+    name = original_name + suffix_counter;
+  }
+  return name;
+};
 let joinLobby = (json, redis, rsub, rpub, log) => {
     log.debug(json);
     if(json.name) {
