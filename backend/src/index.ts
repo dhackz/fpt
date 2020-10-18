@@ -1,4 +1,4 @@
-import { Tedis, TedisPool } from "tedis";
+const Redis = require("ioredis");
 
 function getEnvironmentVar(varname, defaultvalue)
 {
@@ -9,10 +9,10 @@ function getEnvironmentVar(varname, defaultvalue)
         return defaultvalue;
 }
 
-const tedis = new Tedis({
-  host: getEnvironmentVar("TEDIS_HOST", "127.0.0.1"),
-  port: 6379
-});
+const redis = new Redis(
+  6379,
+  getEnvironmentVar("REDIS_HOST", "127.0.0.1")
+);
 
 
 let express = require('express');
@@ -27,17 +27,17 @@ import {createProxy} from "./lobby/proxy-server";
 app.get('/api/status', (req,res) => { res.end("OK") })
 
 app.post('/api/lobby/new', jsonParser, (req, res) => {
-    let response = createLobby(req.body, tedis);
+    let response = createLobby(req.body, redis);
     res.end(JSON.stringify(response));
 });
 
 app.post('/api/lobby/join', jsonParser, (req, res) => {
-    let response = joinLobby(req.body, tedis);
+    let response = joinLobby(req.body, redis);
     res.end(JSON.stringify(response))
 })
 
 app.post('/api/lobby/start', jsonParser, (req, res) => {
-    let response = startGame(req.body, tedis);
+    let response = startGame(req.body, redis);
     res.end(JSON.stringify(response))
 })
 
