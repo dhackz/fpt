@@ -23,6 +23,9 @@ let jsonParser = bodyParser.json()
  
 import {createLobby, joinLobby, startGame} from "./lobby/session";
 
+// Start the proxy server.
+require('./lobby/proxy-server')
+
 app.get('/api/status', (req,res) => { res.end("OK") })
 
 app.post('/api/lobby/new', jsonParser, (req, res) => {

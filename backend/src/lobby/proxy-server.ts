@@ -2,7 +2,7 @@ import * as WebSocket from 'ws';
 
 import { sessions } from "./session";
 
-const wss = new WebSocket.Server({ port:8080 })
+const wss = new WebSocket.Server({ port:8081 })
 
 function gameServerUpdate(ws, message) {
     if (!sessions.hasOwnProperty(message.sessionid)) {
@@ -55,6 +55,14 @@ function gameClientUpdate(ws, message) {
     }
 }
 
+wss.on('listening', () => {
+    const addressInfo = wss.address();
+    console.log('Proxy server started. Listening on ws://%s:%s',
+                addressInfo['address'],
+                addressInfo['port'])
+})
+
+
 wss.on('connection', (ws,req) => {
     console.log('New client connected!')
 
@@ -76,3 +84,4 @@ wss.on('connection', (ws,req) => {
     })
 })
 
+export { wss };
