@@ -1,5 +1,4 @@
-const Redis = require("ioredis");
-
+const Redis = require("ioredis"); 
 function getEnvironmentVar(varname, defaultvalue)
 {
     let result = process.env[varname];
@@ -21,9 +20,6 @@ const rsub = new Redis(
   6379,
   getEnvironmentVar("REDIS_HOST", "127.0.0.1")
 );
-rsub.on("message", (channel, message) => {
-    console.log("Received message %s from channel %s", message, channel)
-});
 
 
 let http = require('http');
@@ -35,7 +31,7 @@ let server = http.createServer(app); // Connect express routes to server.
  
 let jsonParser = bodyParser.json()
  
-import {createLobby, joinLobby, startGame} from "./lobby/session";
+import {initSessionHandler, createLobby, joinLobby, startGame} from "./lobby/session";
 import {createProxy} from "./lobby/proxy-server";
 
 app.get('/api/status', (req,res) => { res.end("OK") })
@@ -61,5 +57,6 @@ createProxy(server, redis)
 server.listen(8080, () => {
     let host = server.address().address;
     let port = server.address().port;
+    initSessionHandler(redis, rsub, rpub);
     console.log('App listening at http://%s:%s', host, port);
 })
