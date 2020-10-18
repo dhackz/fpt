@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "ioredis": "^4.17.3",
+    "tslog": "^2.9.1",
     "ws": "^7.3.1"
   }
 }

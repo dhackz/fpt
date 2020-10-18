@@ -11,12 +11,12 @@ let initSessionHandler = (r, s, p) => {
     rsub.on("message", handleMessageBus);
 }
 
-let handleJoinLobby = (sessionId, playerName) => {
+let handleJoinLobby = (sessionId, playerName, log) => {
     let sessionKey = "session:" + sessionId;
     let playersKey = sessionKey + ":players"
-    console.log(playersKey);
+    log.debug(playersKey);
     return redis.llen(playersKey).then((numPlayers) =>{
-        console.log(numPlayers, typeof(numPlayers));
+        log.debug(numPlayers, typeof(numPlayers));
         if (numPlayers < 4) {
             redis.lpush(playersKey, playerName);
             return "OK " + playerName;
@@ -26,14 +26,14 @@ let handleJoinLobby = (sessionId, playerName) => {
     }).catch((error) => {return "DENY " + playerName;});
 }
 
-let handleMessageBus = (channel, message) => {
-    console.log("Received message %s from channel %s", message, channel)
+let handleMessageBus = (channel, message, log) => {
+    log.info("Received message "+message+" from channel "+channel)
     let [_session, sessionId, _channels, to] = channel.split(":"); 
     let [request, data] = message.split(" ");
-    console.log(sessionId, to, request, data)
+    log.debug(sessionId, to, request, data)
     switch (request) {
         case "JOIN":
-            handleJoinLobby(sessionId, data).then((response) => {
+            handleJoinLobby(sessionId, data, log).then((response) => {
                 rpub.publish("session:" + sessionId + ":channels:clients", response);
             });
     }
@@ -56,7 +56,7 @@ let getSession = (sessionId, redis) => {
     return sessions[sessionId];
 }
 
-let createLobby = (json, redis, rsub) => {
+let createLobby = (json, redis, rsub, log) => {
     const FUNC_NAME = "createLobby";
 
     let sessionId = crypto.createHash("sha256")
@@ -76,12 +76,12 @@ let createLobby = (json, redis, rsub) => {
 
     let lobbyKey    = "lobby:" + lobbyId;
     redis.set(lobbyKey, sessionId, (err, count) => {
-        console.log("%s: err: %s", FUNC_NAME, err)
-        console.log("%s: count: %s", FUNC_NAME, count)
+        log.warn("err: "+err)
+        log.warn("count: "+count)
     });
     redis.lpush("sessions", sessionId, (err, count) => {
-        console.log("%s: err: %s", FUNC_NAME, err)
-        console.log("%s: count: %s", FUNC_NAME, count)
+        log.warn("err: "+err)
+        log.warn("count: "+count)
     });
 
     sessions[sessionId] = {
@@ -94,8 +94,8 @@ let createLobby = (json, redis, rsub) => {
     }
 
     rsub.subscribe(sessionKey + ":channels:server", (err, count) => {
-        console.log("err: " + err)
-        console.log("count: " + count)
+        log.warn("err: " + err)
+        log.warn("count: " + count)
     });
 
     return {
@@ -112,8 +112,8 @@ let uniquePlayerName = (original_name, players) => {
     }
     return name;
 }
-let joinLobby = (json, redis, rsub, rpub) => {
-    console.log(json);
+let joinLobby = (json, redis, rsub, rpub, log) => {
+    log.debug(json);
     if(json.name) {
         let session_id = getSessionIdFromLobbyId(json.joinCode, redis)
         if(!session_id) {
@@ -122,12 +122,12 @@ let joinLobby = (json, redis, rsub, rpub) => {
         let session = getSession(session_id, redis);
 
         let name = uniquePlayerName(json.name, Object.keys(session.players))
-        console.log("Player %s joined, %d in lobby %s", name, Object.keys(session.players).length, json.joinCode);
+        log.info("Player "+name+" joined, "+Object.keys(session.players).length+" in lobby "+json.joinCode);
         let sessionKey = "session:" + session_id;
 
         rsub.subscribe(sessionKey + ":channels:clients", (err, count) => {
-            console.log("err: " + err);
-            console.log("count: " + count);
+            log.warn("err: " + err);
+            log.warn("count: " + count);
         });
         let joinMessage = "JOIN " + name
         rpub.publish(sessionKey + ":channels:server", joinMessage);
@@ -141,9 +141,9 @@ let joinLobby = (json, redis, rsub, rpub) => {
     }
 }
 
-let startGame = (json, redis) => {
+let startGame = (json, redis, log) => {
     if(json.joinCode) {
-        console.log("Game %s is starting", json.joinCode);
+        log.info("Game "+json.joinCode+" is starting");
         return {
             ok: delete lobbies[json.joinCode]
         }
