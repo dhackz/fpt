@@ -57,6 +57,8 @@ let getSession = (sessionId, redis) => {
 }
 
 let createLobby = (json, redis, rsub) => {
+    const FUNC_NAME = "createLobby";
+
     let sessionId = crypto.createHash("sha256")
                    .update(""+counter)
                    .digest("base64");
@@ -74,12 +76,12 @@ let createLobby = (json, redis, rsub) => {
 
     let lobbyKey    = "lobby:" + lobbyId;
     redis.set(lobbyKey, sessionId, (err, count) => {
-        console.log("err: " + err)
-        console.log("count: " + count)
+        console.log("%s: err: %s", FUNC_NAME, err)
+        console.log("%s: count: %s", FUNC_NAME, count)
     });
     redis.lpush("sessions", sessionId, (err, count) => {
-        console.log("err: " + err)
-        console.log("count: " + count)
+        console.log("%s: err: %s", FUNC_NAME, err)
+        console.log("%s: count: %s", FUNC_NAME, count)
     });
 
     sessions[sessionId] = {

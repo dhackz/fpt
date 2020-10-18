@@ -7,21 +7,28 @@ let createProxy = (server, redis) => {
     const wss = new WebSocket.Server({server});
     const PROXY_NAME ="WebSocketServer";
 
+    let sessionExists = async (sessionId) => {
+        console.log("%s: %s(): Asking Redis if session:%s exists...", PROXY_NAME, "sessionExists", sessionId);
+        if (await redis.exists('session:'+sessionId)) {
+            console.log("%s: %s(): session:%s found in redis.", PROXY_NAME, "sessionExists", sessionId);
+            return true;
+        }
+        console.log("%s: %s(): session:%s found in redis.", PROXY_NAME, "sessionExists", sessionId);
+        return false;
+    }
+
     async function gameServerUpdate(ws, message) {
         let FUNC_NAME="gameServerUpdate";
 
-        if (await redis.exists('session:'+message.sessionId)) {
+        if (!sessionExists(message.sessionId)) {
             const error = "No such sessionId exists: " + message.sessionId;
             ws.send(JSON.stringify({error}));
-            console.log("%s(): sessions: %s", PROXY_NAME, FUNC_NAME, sessions);
-            return;
         }
-
-        console.log("%s: %s(): found session..", PROXY_NAME, FUNC_NAME);
 
         // There should already be a valid session.
         let session = await redis.get('session:'+message.sessionId);
-        console.log("%s: %s(): session: %s", PROXY_NAME, FUNC_NAME, session);
+        console.log("%s: %s(): Result fetched session with id session: %s", PROXY_NAME, FUNC_NAME, session);
+
         switch (message.action) {
             case 'register':
                 break;
@@ -41,11 +48,10 @@ let createProxy = (server, redis) => {
     async function gameClientUpdate(ws: WebSocket, message) {
         let FUNC_NAME="gameClientUpdate";
 
-        if (await redis.exists('session:'+message.sessionId)) {
-            const error = "No such sessionId exists: " + message.sessionId
+        if (!sessionExists(message.sessionId)) {
+            const error = "No such sessionId exists: " + message.sessionId;
             ws.send(JSON.stringify({error}));
-            console.log(sessions);
-            return;
+            console.log("%s(): sessions: %s", PROXY_NAME, FUNC_NAME, sessions);
         }
 
         console.log("%s(): found session..", FUNC_NAME);
