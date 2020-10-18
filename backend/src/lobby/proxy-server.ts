@@ -5,7 +5,7 @@ import { sessions } from "./session";
 let createProxy = (tedis) => {
     const wss = new WebSocket.Server({ port:8081 })
 
-    function gameServerUpdate(ws, message) {
+    async function gameServerUpdate(ws, message) {
         if (await tedis.exists(message.sessionId)) {
             ws.send("No such sessionId exists!");
             return;
@@ -30,18 +30,17 @@ let createProxy = (tedis) => {
         }
     }
 
-    function gameClientUpdate(ws, message) {
-        if (await tedis.exists(message.sessionId)) {
+    async function gameClientUpdate(ws: WebSocket, message) {
+        if (await tedis.exists('session:'+message.sessionId)) {
             ws.send("No such sessionId exists!");
             return;
         }
 
         // There should already be a valid session.
-        let session = sessions[message.sessionId];
-
+        let session = tedis.get('session:'+message.sessionId);
+        
         switch (message.action) {
             case 'register':
-                tedis.set(gameKey, "game", json.game);
                 session.socket = ws;
                 break;
             case 'sendAll':
