@@ -56,11 +56,9 @@ let joinLobby = (json, tedis) => {
             let session = sessions[session_id]
 
             let name = uniquePlayerName(json.name, Object.keys(session.players))
-            session.players[name] = "socket:for:"+name
             console.log("Player %s joined, %d in lobby %s", name, Object.keys(session.players).length, json.joinCode);
             return {
                 session_id,
-                'socket_info': session.socket,
                 'players': Object.keys(session.players),
                 'player_name': name
             }
