@@ -3,7 +3,7 @@ const sessions = {};
 const lobbies = {};
 let counter = 1;
 
-let createLobby = (json, tedis) => {
+let createLobby = (json, redis) => {
     let sessionId = crypto.createHash("sha256")
                    .update(""+counter)
                    .digest("base64");
@@ -17,11 +17,11 @@ let createLobby = (json, tedis) => {
     let sessionKey  = "session:" + sessionId;
     let playersKey  = sessionKey + ":players";
     let gameKey     = sessionKey + ":game";
-    tedis.set(gameKey, "game", json.game);
+    redis.set(gameKey, json.game);
 
     let lobbyKey    = "lobby:" + lobbyId;
-    tedis.set(lobbyKey, sessionId);
-    tedis.lpush("sessions", sessionId);
+    redis.set(lobbyKey, sessionId);
+    redis.lpush("sessions", sessionId);
 
     sessions[sessionId] = {
         "game": json.game,
@@ -46,7 +46,7 @@ let uniquePlayerName = (original_name, players) => {
     }
     return name;
 }
-let joinLobby = (json, tedis) => {
+let joinLobby = (json, redis) => {
     if(lobbies[json.joinCode]) {
         if(json.name) {
             let session_id = lobbies[json.joinCode].id
@@ -72,7 +72,7 @@ let joinLobby = (json, tedis) => {
     }
 }
 
-let startGame = (json, tedis) => {
+let startGame = (json, redis) => {
     if(json.joinCode) {
         console.log("Game %s is starting", json.joinCode);
         return {
