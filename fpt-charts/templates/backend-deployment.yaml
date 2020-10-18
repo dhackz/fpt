@@ -17,6 +17,9 @@ spec:
       containers:
       - name: fpt-backend
         image: {{ .Values.backend.image | quote }}
+        env:
+        - name: REDIS_HOST
+          value: redis-primary-svc
         ports:
           - name: http
             containerPort: 8080
