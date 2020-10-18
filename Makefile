@@ -12,7 +12,7 @@ install: backend frontend load
 	kubectl --context=$(KUBE_CONTEXT) delete pods -l app=fpt-backend
 
 backend:
-	docker build backend --tag fpt/fpt-backend:dev
+	docker build backend  --tag fpt/fpt-backend:dev
 
 frontend:
 	docker build frontend --tag fpt/fpt-frontend:dev

@@ -26,7 +26,14 @@ const Lobby = () => {
   };
 
   useEffect(() => {
-    const ws: Sockette = new Sockette('ws://localhost:8080', {
+    let apiUrl = process.env.REACT_APP_API_URL
+    if(apiUrl) {
+        apiUrl = apiUrl.replace(/^http(s)?/, "ws")
+    } else {
+        apiUrl = "ws://" + window.location.host
+    }
+
+    const ws: Sockette = new Sockette(apiUrl + "/api/socket/" + session, {
       timeout: 5e3,
       maxAttempts: 10,
       onopen: (e: Event) => () => {
