@@ -9,17 +9,18 @@ const JoinLobby = () => {
   const [nickname, setNickname] = useState('');
   const [joinCode, setJoinCode] = useState('');
 
-  const { setUserRole, setSession } = useGameState();
+  const { setUserRole, setSession, setPlayerName } = useGameState();
 
   const joinLobby = async () => {
     const url = process.env.REACT_APP_API_URL + '/api/lobby/join';
     const response = await axios.post(
       url,
-      { join_code: joinCode, name: nickname },
+      { joinCode, name: nickname },
       { headers: { 'Content-Type': 'application/json' } }
     );
     if (response.status === 200) {
       setUserRole('client');
+      setPlayerName(response.data.playerName);
       setSession(response.data.session_id);
       history.push('/lobby/' + joinCode);
     }

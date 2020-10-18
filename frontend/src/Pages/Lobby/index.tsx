@@ -7,7 +7,7 @@ import * as Styled from './styles';
 const Lobby = () => {
   const joinCode = window.location.pathname.split('/')[2];
 
-  const { role, setLobbySocket, session } = useGameState();
+  const {role, setLobbySocket, session, players, setPlayersList, playerName, setPlayerName} = useGameState()
 
   const onMessage = (ws: Sockette, message: MessageEvent) => {
     console.log(message.data);
@@ -20,8 +20,17 @@ const Lobby = () => {
       ws.json({
         actor: role,
         action: 'register',
-        sessionId: session
-      });
+        sessionId: session,
+        name: playerName
+      })
+    }
+    if(json.message) {
+      if(json.message.playerName) {
+        setPlayerName(json.message.playerName);
+      }
+      if(json.message.players) {
+        setPlayersList(json.message.players);
+      }
     }
   };
 
@@ -48,7 +57,7 @@ const Lobby = () => {
     const url = process.env.REACT_APP_API_URL + '/api/lobby/start';
     const response = await axios.post(
       url,
-      { join_code: joinCode },
+      { joinCode },
       { headers: { 'Content-Type': 'application/json' } }
     );
     if (response.data.ok) {
@@ -99,6 +108,7 @@ const Lobby = () => {
       >
         Join code: {joinCode}
       </div>
+      {players}
       <button onClick={startGame}>Start game</button>
     </Styled.Fullscreen>
   ) : (
@@ -106,6 +116,8 @@ const Lobby = () => {
       <div>{title}</div>
       <div>Join code: {joinCode}</div>
       <div>Waiting for host to start game...</div>
+      <p>You are: {playerName}</p>
+      {players}
     </>
   );
 };

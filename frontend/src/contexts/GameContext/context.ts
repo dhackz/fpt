@@ -7,6 +7,10 @@ type GameContext = {
   setLobbySocket: (newSocket: Sockette) => void;
   session: String;
   setSession: (newSession: String) => void;
+  players: (String[]);
+  setPlayersList: (newPlayers: String[]) => void;
+  playerName: String;
+  setPlayerName: (newPlayerName: String) => void;
 };
 
 export default createContext<GameContext | undefined>(undefined);

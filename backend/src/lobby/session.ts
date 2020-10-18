@@ -1,3 +1,4 @@
+
 let crypto = require("crypto");
 const sessions = {};
 const lobbies = {};
@@ -71,7 +72,8 @@ let createLobby = (json, redis, rsub) => {
     let playersKey  = sessionKey + ":players";
     let gameKey     = sessionKey + ":game";
     redis.set(gameKey, json.game);
-
+    redis.set(sessionKey, "true");
+    
     let lobbyKey    = "lobby:" + lobbyId;
     redis.set(lobbyKey, sessionId, (err, count) => {
         console.log("err: " + err)
@@ -132,7 +134,7 @@ let joinLobby = (json, redis, rsub, rpub) => {
         return {
             session_id,
             'players': Object.keys(session.players),
-            'player_name': name
+            'playerName': name
         }
     } else {
         return {'error': "NO_NAME_PROVIDED"}
@@ -141,7 +143,7 @@ let joinLobby = (json, redis, rsub, rpub) => {
 
 let startGame = (json, redis) => {
     if(json.joinCode) {
-        console.log("Game %s is starting", json.joinCode);
+        console.log("session: Game %s is starting", json.joinCode);
         return {
             ok: delete lobbies[json.joinCode]
         }
