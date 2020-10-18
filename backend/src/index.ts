@@ -13,6 +13,18 @@ const redis = new Redis(
   6379,
   getEnvironmentVar("REDIS_HOST", "127.0.0.1")
 );
+const rpub = new Redis(
+  6379,
+  getEnvironmentVar("REDIS_HOST", "127.0.0.1")
+);
+const rsub = new Redis(
+  6379,
+  getEnvironmentVar("REDIS_HOST", "127.0.0.1")
+);
+rsub.on("message", (channel, message) => {
+    console.log("Received message %s from channel %s", message, channel)
+});
+
 
 let http = require('http');
 let express = require('express');
@@ -29,7 +41,7 @@ import {createProxy} from "./lobby/proxy-server";
 app.get('/api/status', (req,res) => { res.end("OK") })
 
 app.post('/api/lobby/new', jsonParser, (req, res) => {
-    let response = createLobby(req.body, redis);
+    let response = createLobby(req.body, redis, rsub);
     res.end(JSON.stringify(response));
 });
 
