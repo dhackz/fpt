@@ -22,9 +22,7 @@ let app = express();
 let jsonParser = bodyParser.json()
  
 import {createLobby, joinLobby, startGame} from "./lobby/session";
-
-// Start the proxy server.
-require('./lobby/proxy-server')
+import {createProxy} from "./lobby/proxy-server";
 
 app.get('/api/status', (req,res) => { res.end("OK") })
 
@@ -42,6 +40,9 @@ app.post('/api/lobby/start', jsonParser, (req, res) => {
     let response = startGame(req.body, tedis);
     res.end(JSON.stringify(response))
 })
+
+// Start the proxy server.
+createProxy(tedis)
 
 let server = app.listen(8080, function () {
     let host = server.address().address;
