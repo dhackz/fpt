@@ -1,4 +1,3 @@
-import { format } from 'path';
 import * as WebSocket from 'ws';
 
 import { sessions } from "./session";
@@ -56,6 +55,7 @@ let createProxy = (server, redis, log) => {
 
         switch (message.action) {
             case 'register':
+                ws.send(JSON.stringify({message:{players:[message.name], playerName:message.name}}))
                 break;
             case 'sendAll':
                 break;

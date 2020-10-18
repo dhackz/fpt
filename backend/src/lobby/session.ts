@@ -1,3 +1,4 @@
+
 let crypto = require("crypto");
 const sessions = {};
 const lobbies = {};
@@ -188,7 +189,7 @@ let joinLobby = (json, redis, rsub, rpub, log) => {
         return {
             session_id,
             'players': Object.keys(session.players),
-            'player_name': name
+            'playerName': name
         }
     } else {
         return {'error': "NO_NAME_PROVIDED"}

@@ -4,10 +4,11 @@ import Sockette from 'sockette';
 const GameContextProvider: React.FC = props => {
   const [role, setRole] = useState<'client' | 'server'>('server');
   const [socket, setSocket] = useState<Sockette | null>(null);
-  const [session, setSessionId] = useState<String>('');
-
-  const setUserRole = useCallback((newRole: string) => {
-    setRole(newRole as 'client' | 'server');
+  const [session, setSessionId] = useState<String>("");
+  const [players, setPlayers] = useState<String[]>([]);
+  const [playerName, setPlayer] = useState<String>("");
+  const setUserRole = useCallback((newRole:string)=> {
+    setRole(newRole as ("client"|"server"))
   }, []);
 
   const setLobbySocket = useCallback((newSocket: Sockette) => {
@@ -18,13 +19,25 @@ const GameContextProvider: React.FC = props => {
     setSessionId(newSession as String);
   }, []);
 
+  const setPlayersList = useCallback((newPlayers: String[]) => {
+    setPlayers(newPlayers as String[])
+  }, []);
+
+  const setPlayerName = useCallback((newPlayer: String) => {
+    setPlayer(newPlayer as String)
+  }, []);
+
   const providerValue = {
     role,
     setUserRole,
     socket,
     setLobbySocket,
     session,
-    setSession
+    setSession,
+    players,
+    setPlayersList,
+    playerName,
+    setPlayerName
   };
 
   return <GameContext.Provider {...props} value={providerValue} />;

@@ -8,7 +8,7 @@ import Spinner from '../../Components/Spinner';
 const Lobby = () => {
   const joinCode = window.location.pathname.split('/')[2];
 
-  const { role, setLobbySocket, session } = useGameState();
+  const {role, setLobbySocket, session, players, setPlayersList, playerName, setPlayerName} = useGameState()
 
   const onMessage = (ws: Sockette, message: MessageEvent) => {
     console.log(message.data);
@@ -21,8 +21,17 @@ const Lobby = () => {
       ws.json({
         actor: role,
         action: 'register',
-        sessionId: session
-      });
+        sessionId: session,
+        name: playerName
+      })
+    }
+    if(json.message) {
+      if(json.message.playerName) {
+        setPlayerName(json.message.playerName);
+      }
+      if(json.message.players) {
+        setPlayersList(json.message.players);
+      }
     }
   };
 
@@ -56,7 +65,7 @@ const Lobby = () => {
     const url = window.location.origin + '/api/lobby/start';
     const response = await axios.post(
       url,
-      { join_code: joinCode },
+      { joinCode },
       { headers: { 'Content-Type': 'application/json' } }
     );
     if (response.data.ok) {
@@ -86,7 +95,17 @@ const Lobby = () => {
         <Styled.SmallText>Waiting for host to start game...</Styled.SmallText>
         <Spinner />
       </div>
+      {players}
+      <button onClick={startGame}>Start game</button>
     </Styled.Fullscreen>
+  ) : (
+    <>
+      <div>{title}</div>
+      <div>Join code: {joinCode}</div>
+      <div>Waiting for host to start game...</div>
+      <p>You are: {playerName}</p>
+      {players}
+    </>
   );
 };
 
