@@ -3,6 +3,7 @@ import axios from 'axios';
 import Sockette from 'sockette';
 import useGameState from '../../hooks/useGameState';
 import * as Styled from './styles';
+import Spinner from '../../Components/Spinner';
 
 const Lobby = () => {
   const joinCode = window.location.pathname.split('/')[2];
@@ -68,52 +69,24 @@ const Lobby = () => {
   const title = 'Secret Mussolini';
 
   return role === 'server' ? (
-    <Styled.Fullscreen>
-      <div
-        style={{
-          borderRadius: '50%',
-          backgroundColor: 'white',
-          width: '40vw',
-          height: '40vw',
-          position: 'fixed',
-          top: '50%',
-          left: '50%',
-          WebkitTransform: 'translate(-50%, -50%)',
-          transform: 'translate(-50%, -50%)'
-        }}
-      />
-      <div
-        style={{
-          color: 'white',
-          position: 'absolute',
-          top: '10rem',
-          left: '6rem',
-          fontSize: '60px',
-          transform: 'rotate(-20deg)'
-        }}
-      >
-        {title}
-      </div>
-      <div
-        style={{
-          color: 'white',
-          position: 'absolute',
-          top: '10rem',
-          right: '6rem',
-          fontSize: '48px',
-          transform: 'rotate(20deg)'
-        }}
-      >
-        Join code: {joinCode}
-      </div>
-      <button onClick={startGame}>Start game</button>
-    </Styled.Fullscreen>
-  ) : (
     <>
-      <div>{title}</div>
-      <div>Join code: {joinCode}</div>
-      <div>Waiting for host to start game...</div>
+      <Styled.Fullscreen>
+        <Styled.BackgroundCircle />
+        <Styled.HostTitle>{title}</Styled.HostTitle>
+        <Styled.HostCode>Join code: {joinCode}</Styled.HostCode>
+        <Styled.StartButton onClick={startGame}>Start game</Styled.StartButton>
+      </Styled.Fullscreen>
     </>
+  ) : (
+    <Styled.Fullscreen>
+      <Styled.BackgroundCircle />
+      <Styled.ClientText>{title}</Styled.ClientText>
+      <Styled.ClientText>Join code: {joinCode}</Styled.ClientText>
+      <div style={{ width: '100%', marginBottom: '2vw', position: 'absolute', bottom: 0 }}>
+        <Styled.SmallText>Waiting for host to start game...</Styled.SmallText>
+        <Spinner />
+      </div>
+    </Styled.Fullscreen>
   );
 };
 
