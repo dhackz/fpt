@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Sockette from 'sockette';
 import axios from 'axios';
 import useGameState from '../../hooks/useGameState';
 import * as Styled from './styles';
-import {newSocketListener} from '../../tools/socket';
+import { newSocketListener } from '../../tools/socket';
 
 const Lobby = () => {
   const joinCode = window.location.pathname.split('/')[2];
-  const {role, setLobbySocket, session, playerName, setPlayerName} = useGameState()
-  const [players, setPlayers] = useState<String[]>([]);
+  const { role, setLobbySocket, session, playerName, setPlayerName } = useGameState();
+  const players = useRef<Array<String>>([]);
   const onMessage = (ws: Sockette, message: MessageEvent) => {
     message.preventDefault();
     const json = JSON.parse(message.data);
-    console.log("got a message!, ", json);
+    console.log('got a message!, ', json);
     if (json.error) {
       console.log('WebSocket error: %s', json.error);
       return;
@@ -23,27 +23,27 @@ const Lobby = () => {
         action: 'register',
         sessionId: session,
         name: playerName
-      })
-      console.log("sending register to session");
+      });
+      console.log('sending register to session');
     }
-    if(json.message) {
-      console.log("we joined the game")
-      if(json.message.playerName) {
-        setPlayerName(json.message.playerName); 
-        setPlayers([...players,json.message.playerName]);
+    if (json.message) {
+      console.log('we joined the game');
+      if (json.message.playerName) {
+        setPlayerName(json.message.playerName);
+        players.current = [...players.current, json.message.playerName];
       }
     }
-    if(json.newPlayer) {
-      console.log("a new player joined: ", json.newPlayer);
-      console.log("players was: ", players);
-      console.log("all players are now: ", [...players, json.newPlayer ]);
-      setPlayers([...players, json.newPlayer ]);
+    if (json.newPlayer) {
+      console.log('a new player joined: ', json.newPlayer);
+      console.log('players was: ', players.current);
+      console.log('all players are now: ', [...players.current, json.newPlayer]);
+      players.current = [...players.current, json.newPlayer];
     }
   };
 
-  useEffect(()=>{
-    console.log("players was changed", players)
-  },[players])
+  useEffect(() => {
+    console.log('players was changed', players.current);
+  }, [players]);
 
   useEffect(() => {
     newSocketListener(onMessage);
@@ -105,7 +105,6 @@ const Lobby = () => {
       >
         Join code: {joinCode}
       </div>
-      {players}
       <button onClick={startGame}>Start game</button>
     </Styled.Fullscreen>
   ) : (
@@ -114,7 +113,6 @@ const Lobby = () => {
       <div>Join code: {joinCode}</div>
       <div>Waiting for host to start game...</div>
       <p>You are: {playerName}</p>
-      {players}
     </>
   );
 };
