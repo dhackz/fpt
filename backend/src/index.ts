@@ -1,3 +1,6 @@
+import { Logger } from "tslog";
+const log: Logger = new Logger();
+
 const Redis = require("ioredis"); 
 function getEnvironmentVar(varname, defaultvalue)
 {
@@ -21,7 +24,6 @@ const rsub = new Redis(
   getEnvironmentVar("REDIS_HOST", "127.0.0.1")
 );
 
-
 let http = require('http');
 let express = require('express');
 let bodyParser = require('body-parser')
@@ -37,26 +39,26 @@ import {createProxy} from "./lobby/proxy-server";
 app.get('/api/status', (req,res) => { res.end("OK") })
 
 app.post('/api/lobby/new', jsonParser, (req, res) => {
-    let response = createLobby(req.body, redis, rsub);
+    let response = createLobby(req.body, redis, rsub, log);
     res.end(JSON.stringify(response));
 });
 
 app.post('/api/lobby/join', jsonParser, (req, res) => {
-    let response = joinLobby(req.body, redis, rsub, rpub);
+    let response = joinLobby(req.body, redis, rsub, rpub, log);
     res.end(JSON.stringify(response))
 })
 
 app.post('/api/lobby/start', jsonParser, (req, res) => {
-    let response = startGame(req.body, redis);
+    let response = startGame(req.body, redis, log);
     res.end(JSON.stringify(response))
 })
 
 // Start the proxy server.
-createProxy(server, redis)
+createProxy(server, redis, log)
 
 server.listen(8080, () => {
     let host = server.address().address;
     let port = server.address().port;
     initSessionHandler(redis, rsub, rpub);
-    console.log('App listening at http://%s:%s', host, port);
+    log.info("App listening at http://"+host+":"+port);
 })
