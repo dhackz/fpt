@@ -50,6 +50,7 @@ jobs:
               protocol: TCP
           EOF
 
+      - run: cat kindconfig.yaml
       - uses: engineerd/setup-kind@v0.4.0
         with:
           configFile: kindconfig.yaml
