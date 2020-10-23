@@ -1,5 +1,8 @@
 name: build-containers
 on:
+  - push:
+      branches:
+        - master
   - pull_request
 
 jobs:
@@ -23,7 +26,17 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.CR_PAT }}
 
-      - name: Build fpt/fpt-${{ matrix.service }}
+      - if: github.event == "push" && github.head_ref == "master"
+        name: Build fpt/fpt-${{ matrix.service }}
+        uses: docker/build-push-action@v2
+        with:
+          file: ${{ matrix.service }}/Dockerfile
+          pull: true
+          push: true
+          context: ${{ matrix.service }}
+          tags: ghcr.io/dhackz/fpt/fpt-${{ matrix.service }}:latest
+      - if: github.event == "pull_request"
+        name: Build fpt/fpt-${{ matrix.service }}
         uses: docker/build-push-action@v2
         with:
           file: ${{ matrix.service }}/Dockerfile
