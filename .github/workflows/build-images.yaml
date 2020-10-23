@@ -11,5 +11,9 @@ jobs:
           - frontend
           - backend
     steps:
+      - name: Echo working diretory
+        run: pwd
+      - name: Echo working diretory
+        run: ls
       - name: Build docker image
         run: docker build -t fpt/fpt-${{ matrix.service }} ${{ matrix.service }}
