@@ -12,8 +12,8 @@ jobs:
           - backend
     steps:
       - name: Build and push
-        working-directory: ${{ matrix.service }}
         id: docker_build
         uses: docker/build-push-action@v2
         with:
+          context: ${{ matrix.service }}
           tags: fpt/fpt-${{ matrix.service }}
