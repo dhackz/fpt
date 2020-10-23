@@ -11,6 +11,7 @@ jobs:
           - frontend
           - backend
     steps:
+      - uses: actions/checkout@master
       - name: Echo working diretory
         run: pwd
       - name: Echo working diretory
