@@ -56,6 +56,9 @@ jobs:
       - name: Install nginx kind ingress
         run: kubectl apply --wait -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml
 
+      - name: Get all things in kind
+        run: kubectl get all --all-namespaces
+
       - name: Load images into kind
         run: |
           kind load docker-image fpt/fpt-backend:dev
