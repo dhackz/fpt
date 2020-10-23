@@ -6,8 +6,5 @@ dist: bionic
 language: minimal
 services:
   - docker
-before_script:
-  - cd $TRAVIS_BUILD_DIR
-  - pushd tools && docker-compose up -d && popd
 script:
   - docker build -t fpt/fpt-$FPT_SERVICE $FPT_SERVICE
