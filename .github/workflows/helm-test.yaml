@@ -4,34 +4,29 @@ on: [pull_request]
 jobs:
   helm-test:
     runs-on: ubuntu-latest
-    services:
-      registry:
-        image: registry:2
-        ports:
-          - 5000:5000
     steps:
       - uses: actions/checkout@master
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      - name: Build fpt/fpt-frontend
+      - name: Build fpt/fpt-backend
         uses: docker/build-push-action@v2
         with:
           file: backend/Dockerfile
-          pull: true
-          push: true
           context: backend
-          tags: localhost:5000/fpt/fpt-backend:latest
+          load: true
+          pull: true
+          tags: fpt/fpt-backend:dev
 
       - name: Build fpt/fpt-frontend
         uses: docker/build-push-action@v2
         with:
           file: frontend/Dockerfile
-          pull: true
-          push: true
           context: frontend 
-          tags: localhost:5000/fpt/fpt-frontend:latest
+          load: true
+          pull: true
+          tags: pt/fpt-frontend:dev
 
       - uses: engineerd/setup-kind@v0.4.0
       - name: Testing
@@ -43,10 +38,6 @@ jobs:
 
       - name: Pull local registry image and load into kind
         run: |
-          docker pull localhost:5000/fpt/fpt-frontend
-          docker tag localhost:5000/fpt/fpt-frontend fpt/fpt-frontend
-          docker pull localhost:5000/fpt/fpt-backend
-          docker tag localhost:5000/fpt/fpt-backend fpt/fpt-backend
           kind load docker-image fpt/fpt-backend:dev
           kind load docker-image fpt/fpt-frontend:dev
 
