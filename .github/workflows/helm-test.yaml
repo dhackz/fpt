@@ -28,20 +28,42 @@ jobs:
           pull: true
           tags: fpt/fpt-frontend:dev
 
-      - uses: engineerd/setup-kind@v0.4.0
-      - name: Testing
+      - name: Write KinD config with ingress
         run: |
-          kubectl cluster-info
-          kubectl get pods -n kube-system
-          echo "current-context:" $(kubectl config current-context)
-          echo "environment-kubeconfig:" ${KUBECONFIG}
+          cat <<EOF > kindconfig.yaml
+          kind: Cluster
+          apiVersion: kind.x-k8s.io/v1alpha4
+          nodes:
+          - role: control-plane
+            kubeadmConfigPatches:
+            - |
+              kind: InitConfiguration
+              nodeRegistration:
+                kubeletExtraArgs:
+                  node-labels: "ingress-ready=true"
+            extraPortMappings:
+            - containerPort: 80
+              hostPort: 80
+              protocol: TCP
+            - containerPort: 443
+              hostPort: 443
+              protocol: TCP
+          EOF
 
-      - name: Pull local registry image and load into kind
+      - uses: engineerd/setup-kind@v0.4.0
+        with:
+          configFile: kindconfig.yaml
+      - name: Install nginx kind ingress
+        run: kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml
+
+      - name: Load images into kind
         run: |
           kind load docker-image fpt/fpt-backend:dev
           kind load docker-image fpt/fpt-frontend:dev
 
       - name: Install helm
         run: curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
-      - name: Install helm packages
-        run: helm upgrade --install --devel fpt ./fpt-charts 
+      - name: Install helm charts
+        run: helm upgrade --wait --install --devel fpt ./fpt-charts 
+      - name: Test api status
+        run: curl localhost/api/status
