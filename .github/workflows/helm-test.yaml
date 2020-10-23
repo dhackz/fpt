@@ -38,9 +38,10 @@ jobs:
 
       - name: Pull local registry image and load into kind
         run: |
-          docker image ls
           kind load docker-image fpt/fpt-backend:dev
           kind load docker-image fpt/fpt-frontend:dev
 
-      - name: Install helm charts in kind
-        run: echo "Should helm install but lets continue with that later"
+      - name: Install helm
+        run: curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+      - name: Install helm packages
+        run: helm upgrade --install --devel fpt ./fpt-charts 
