@@ -17,5 +17,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           file: ${{ matrix.service }}/Dockerfile
+          pull: true
           context: ${{ matrix.service }}
           tags: fpt/fpt-${{ matrix.service }}
