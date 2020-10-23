@@ -27,6 +27,4 @@ jobs:
           pull: true
           push: true
           context: ${{ matrix.service }}
-          tags: |
-            fpt/fpt-${{ matrix.service 
-            ghcr.io/fpt/fpt-${{ matrix.service }}:${{ github.head_ref }}
+          tags: ghcr.io/fpt/fpt-${{ matrix.service }}:${{ github.head_ref }}
