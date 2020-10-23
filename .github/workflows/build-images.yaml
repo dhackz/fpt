@@ -26,11 +26,7 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.CR_PAT }}
 
-      - run: echo ${{ github.event_name }}
-      - run: echo ${{ github.ref }}
-      - run: echo ${{ github.head_ref }}
-      - run: echo ${{ github.base_ref }}
-      - if: github.event_name == 'push' && github.ref == 'master'
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         name: Build fpt/fpt-${{ matrix.service }}
         uses: docker/build-push-action@v2
         with:
