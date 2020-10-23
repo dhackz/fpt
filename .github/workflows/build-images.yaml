@@ -12,9 +12,9 @@ jobs:
           - backend
     steps:
       - uses: actions/checkout@master
-      - name: Echo working diretory
-        run: pwd
-      - name: Echo working diretory
-        run: ls
-      - name: Build docker image
-        run: docker build -t fpt/fpt-${{ matrix.service }} ${{ matrix.service }}
+
+      - name: Build against builder2
+        uses: docker/build-push-action@v2
+        with:
+          context: ${{ matrix.service }}
+          tags: fpt/fpt-${{ matrix.service }}
