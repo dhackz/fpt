@@ -30,4 +30,4 @@ jobs:
           pull: true
           push: true
           context: ${{ matrix.service }}
-          tags: ghcr.io/fpt/fpt-${{ matrix.service }}:${{ github.head_ref }}
+          tags: ghcr.io/dhackz/fpt/fpt-${{ matrix.service }}:${{ github.head_ref }}
