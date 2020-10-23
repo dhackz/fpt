@@ -2,7 +2,7 @@ env:
   - FPT_SERVICE=frontend
   - FPT_SERVICE=backend
 os: linux
-dist: bionic
+dist: focal
 language: minimal
 services:
   - docker
