@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
-      - name: Build against builder2
+      - name: Build fpt/fpt-${{ matrix.service }}
         uses: docker/build-push-action@v2
         with:
           file: ${{ matrix.service }}/Dockerfile
