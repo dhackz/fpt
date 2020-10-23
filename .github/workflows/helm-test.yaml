@@ -56,9 +56,6 @@ jobs:
       - name: Install nginx kind ingress
         run: kubectl apply --wait -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml
 
-      - name: Get node config
-        run: kubectl describe nodes
-
       - name: Wait for ingress
         run: |
           while [[ \
@@ -67,7 +64,7 @@ jobs:
                 -n ingress-nginx \
                 -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" \
           ]]; \
-          do echo "waiting for pods:\n$(kubectl get pods -n ingress-nginx)" && sleep 1; done
+          do echo "waiting for pods" && sleep 1; done
 
       - name: Load images into kind
         run: |
