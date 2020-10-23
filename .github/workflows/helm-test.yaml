@@ -64,7 +64,7 @@ jobs:
                 -n ingress-nginx \
                 -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" \
           ]]; \
-          do echo "waiting for pod" && sleep 1; done
+          do echo "waiting for pods:\n$(kubectl get pods -n ingress-nginx)" && sleep 1; done
 
       - name: Get all things in kind
         run: kubectl get all --all-namespaces
