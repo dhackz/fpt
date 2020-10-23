@@ -41,6 +41,4 @@ jobs:
         with:
           file: ${{ matrix.service }}/Dockerfile
           pull: true
-          push: true
           context: ${{ matrix.service }}
-          tags: ghcr.io/dhackz/fpt/fpt-${{ matrix.service }}:${{ github.head_ref }}
