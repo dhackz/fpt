@@ -52,3 +52,13 @@ EOF
 - `frontend` build frontend and tag with fpt/fpt-frontend:dev
 - `backend` build backend and tag with fpt/fpt-backend:dev
 - `load` load fpt/fpt-frontend:dev and fpt/fpt-backend:dev into kind.
+
+## Run
+```
+cd tools
+docker-compose up -d
+cd ../backend/
+yarn build && yarn start
+```
+
+Go to http://localhost:8000/
