@@ -40,3 +40,15 @@ jobs:
           kubectl get pods -n kube-system
           echo "current-context:" $(kubectl config current-context)
           echo "environment-kubeconfig:" ${KUBECONFIG}
+
+      - name: Pull local registry image and load into kind
+        run: |
+          docker pull localhost:5000/fpt/fpt-frontend
+          docker tag localhost:5000/fpt/fpt-frontend fpt/fpt-frontend
+          docker pull localhost:5000/fpt/fpt-backend
+          docker tag localhost:5000/fpt/fpt-backend fpt/fpt-backend
+          kind load docker-image fpt/fpt-backend:dev
+          kind load docker-image fpt/fpt-frontend:dev
+
+      - name: Install helm charts in kind
+        run: echo "Should helm install but lets continue with that later"
