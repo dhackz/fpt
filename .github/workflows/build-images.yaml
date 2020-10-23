@@ -1,15 +1,15 @@
 name: build-containers
-strategy:
-  matrix:
-    service:
-      - frontend
-      - backend
 on:
   - pull_request
 
 jobs:
-  main:
+  build-containers:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service:
+          - frontend
+          - backend
     steps:
       - name: Build and push
         id: docker_build
