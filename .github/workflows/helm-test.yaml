@@ -26,7 +26,7 @@ jobs:
           context: frontend 
           load: true
           pull: true
-          tags: pt/fpt-frontend:dev
+          tags: fpt/fpt-frontend:dev
 
       - uses: engineerd/setup-kind@v0.4.0
       - name: Testing
@@ -38,6 +38,7 @@ jobs:
 
       - name: Pull local registry image and load into kind
         run: |
+          docker image ls
           kind load docker-image fpt/fpt-backend:dev
           kind load docker-image fpt/fpt-frontend:dev
 
