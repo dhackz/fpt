@@ -56,6 +56,16 @@ jobs:
       - name: Install nginx kind ingress
         run: kubectl apply --wait -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml
 
+      - name: Wait for ingress
+        run: >
+          while [[ 
+            $(kubectl get pods
+                -l app.kubernetes.io/component=controller
+                -n ingress-nginx
+                -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True"
+          ]];
+          do echo "waiting for pod" && sleep 1; done
+
       - name: Get all things in kind
         run: kubectl get all --all-namespaces
 
