@@ -54,7 +54,7 @@ jobs:
         with:
           configFile: kindconfig.yaml
       - name: Install nginx kind ingress
-        run: kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml
+        run: kubectl apply --wait -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml
 
       - name: Load images into kind
         run: |
