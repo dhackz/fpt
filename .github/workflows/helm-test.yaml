@@ -50,10 +50,9 @@ jobs:
               protocol: TCP
           EOF
 
-      - run: cat kindconfig.yaml
       - uses: engineerd/setup-kind@v0.4.0
         with:
-          configFile: kindconfig.yaml
+          config: kindconfig.yaml
       - name: Install nginx kind ingress
         run: kubectl apply --wait -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml
 
@@ -69,9 +68,6 @@ jobs:
                 -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" \
           ]]; \
           do echo "waiting for pods:\n$(kubectl get pods -n ingress-nginx)" && sleep 1; done
-
-      - name: Get all things in kind
-        run: kubectl get all --all-namespaces
 
       - name: Load images into kind
         run: |
