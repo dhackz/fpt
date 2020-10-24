@@ -6,19 +6,21 @@ import useGameState from '../../hooks/useGameState';
 const SelectGamemode = () => {
   const history = useHistory();
 
-  const { setUserRole, setSession } = useGameState();
+  const { setUserRole, setSession, setGameState,setCurrentGame } = useGameState();
 
   const createLobby = async () => {
     const url = process.env.REACT_APP_API_URL + '/api/lobby/new';
     const response = await axios.post(
       url,
-      { game: 'secret' },
+      { game: 'SecretMussolini' },
       { headers: { 'Content-Type': 'application/json' } }
     );
     if (response.status === 200) {
       setUserRole('server');
       setSession(response.data.session_id);
-      history.push('/lobby/' + response.data.join_code);
+      setGameState('Lobby');
+      setCurrentGame('SecretMussolini');
+      history.push('/game/' + response.data.join_code);
     }
   };
 

@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
 import Sockette from 'sockette';
-import useGameState from '../../hooks/useGameState';
+import useGameState from '../../../../../hooks/useGameState';
 import * as Styled from './styles';
-import Spinner from '../../Components/Spinner';
-
+import Spinner from '../../../../../Components/Spinner';
 const Lobby = () => {
   const joinCode = window.location.pathname.split('/')[2];
 
@@ -68,7 +67,7 @@ const Lobby = () => {
 
   const title = 'Secret Mussolini';
 
-  return role === 'server' ? (
+  return (
     <>
       <Styled.Fullscreen>
         <Styled.BackgroundCircle />
@@ -77,17 +76,7 @@ const Lobby = () => {
         <Styled.StartButton onClick={startGame}>Start game</Styled.StartButton>
       </Styled.Fullscreen>
     </>
-  ) : (
-    <Styled.Fullscreen>
-      <Styled.BackgroundCircle />
-      <Styled.ClientText>{title}</Styled.ClientText>
-      <Styled.ClientText>Join code: {joinCode}</Styled.ClientText>
-      <div style={{ width: '100%', marginBottom: '2vw', position: 'absolute', bottom: 0 }}>
-        <Styled.SmallText>Waiting for host to start game...</Styled.SmallText>
-        <Spinner />
-      </div>
-    </Styled.Fullscreen>
-  );
+  )
 };
 
 export default Lobby;
