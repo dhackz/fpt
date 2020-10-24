@@ -1,5 +1,9 @@
 name: "Create cluster using KinD"
-on: [pull_request]
+on:
+  pull_request:
+  push:
+    branches:
+      - master
 
 jobs:
   helm-test:
@@ -75,5 +79,5 @@ jobs:
         run: curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
       - name: Install helm charts
         run: helm upgrade --wait --install --devel fpt ./fpt-charts 
-      - name: Test api status
-        run: curl localhost/api/status
+      - name: Run api tests
+        run: docker run --network=host --rm -v $(pwd)/tests/postman:/opt/postman postman/newman run /opt/postman/fpt.postman_collection.json
