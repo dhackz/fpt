@@ -3,12 +3,14 @@ const sessions = {};
 const lobbies = {};
 let counter = 1;
 let redis, rsub, rpub;
+let log;
 
-let initSessionHandler = (r, s, p) => {
+let initSessionHandler = (r, s, p, l) => {
     redis = r;
     rsub = s;
     rpub = p;
     rsub.on("message", handleMessageBus);
+    log = l;
 }
 
 let handleJoinLobby = (sessionId, playerName, log) => {
@@ -26,7 +28,7 @@ let handleJoinLobby = (sessionId, playerName, log) => {
     }).catch((error) => {return "DENY " + playerName;});
 }
 
-let handleMessageBus = (channel, message, log) => {
+let handleMessageBus = (channel, message) => {
     log.info("Received message "+message+" from channel "+channel)
     let [_session, sessionId, _channels, to] = channel.split(":"); 
     let [request, data] = message.split(" ");
