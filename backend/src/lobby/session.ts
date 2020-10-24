@@ -165,7 +165,7 @@ let uniquePlayerName = (original_name, players) => {
 let joinLobby = (json, redis, rsub, rpub, log) => {
     log.debug(json);
     if(json.name) {
-        let session_id = getSessionIdFromLobbyId(json.joinCode, redis)
+        let session_id = getSessionIdFromLobbyId(json.join_code, redis)
         if(!session_id) {
             return {'error': "NO_SUCH_LOBBY"}
         }
