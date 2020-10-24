@@ -1,0 +1,173 @@
+{
+	"info": {
+		"_postman_id": "54dc5842-c51e-4d5b-8e27-75f64397f297",
+		"name": "fpt",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/api/status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a7b03648-f49a-48e6-8cde-739c69d62c13",
+						"exec": [
+							"pm.test(\"Status code 200\", () => {",
+							"    pm.response.to.have.status(200);",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseurl}}/api/status",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"api",
+						"status"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "/api/status",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/api/status",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"status"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Sat, 24 Oct 2020 11:13:33 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "2"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						}
+					],
+					"cookie": [],
+					"body": "OK"
+				},
+				{
+					"name": "/api/status",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/api/status",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"status"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Sat, 24 Oct 2020 11:13:33 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "2"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						}
+					],
+					"cookie": [],
+					"body": "OK"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "49abf748-545a-4909-9efd-f3636000a7bc",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "4ec27c24-9acd-4e53-9540-ac609959b2e2",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "3e508974-69e7-4fbe-b7d5-9956a767025a",
+			"key": "baseurl",
+			"value": "localhost"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
