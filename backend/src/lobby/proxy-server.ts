@@ -5,7 +5,6 @@ import { sessions } from "./session";
 
 let createProxy = (server, redis, log) => {
     const wss = new WebSocket.Server({server});
-    const PROXY_NAME ="WebSocketServer";
 
     let sessionExists = async (sessionId) => {
         log.debug("Asking Redis if session:"+sessionId+" exists...");
@@ -18,8 +17,6 @@ let createProxy = (server, redis, log) => {
     }
 
     async function gameServerUpdate(ws, message) {
-        let FUNC_NAME="gameServerUpdate";
-
         if (!sessionExists(message.sessionId)) {
             const error = "No such sessionId exists: " + message.sessionId;
             ws.send(JSON.stringify({error}));
