@@ -138,6 +138,283 @@
 					"body": "OK"
 				}
 			]
+		},
+		{
+			"name": "Create lobby",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c23bad87-2b45-4126-b5b4-8b0c000409a4",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody)",
+							"postman.setEnvironmentVariable(\"sessinId\", jsonData.session_id)",
+							"postman.setEnvironmentVariable(\"joinCode\", jsonData.join_code)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseurl}}/api/lobby/new",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"api",
+						"lobby",
+						"new"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Join lobby user1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a396adeb-b2d9-4605-94f3-0b5f868b7b23",
+						"exec": [
+							"pm.test(\"Session data\", () => {",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson.player_name).to.eql(",
+							"        pm.variables.get(\"name\")",
+							"    )",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "0d603366-ce72-4698-a2bf-85c9fc60ecb0",
+						"exec": [
+							"pm.variables.set(\"name\", \"user1\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"joinCode\": \"{{joinCode}}\",\n    \"name\": \"{{name}}\"\n}"
+				},
+				"url": {
+					"raw": "{{baseurl}}/api/lobby/join",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"api",
+						"lobby",
+						"join"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Join lobby user2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c6e74304-cd7a-4061-a02c-be9325c6651b",
+						"exec": [
+							"pm.test(\"Session data\", () => {",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson.player_name).to.eql(",
+							"        pm.variables.get(\"name\")",
+							"    )",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "1e87a3c8-7dcf-4297-9bc5-3c6b1cde3d2d",
+						"exec": [
+							"pm.variables.set(\"name\", \"user2\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"joinCode\": \"{{joinCode}}\",\n    \"name\": \"{{name}}\"\n}"
+				},
+				"url": {
+					"raw": "{{baseurl}}/api/lobby/join",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"api",
+						"lobby",
+						"join"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Join lobby user3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "281314f6-7bba-436c-86fb-f2e5c9ee8867",
+						"exec": [
+							"pm.test(\"Session data\", () => {",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson.player_name).to.eql(",
+							"        pm.variables.get(\"name\")",
+							"    )",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "e21d8c63-7b51-4068-840c-b5b085a57244",
+						"exec": [
+							"pm.variables.set(\"name\", \"user3\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"joinCode\": \"{{joinCode}}\",\n    \"name\": \"{{name}}\"\n}"
+				},
+				"url": {
+					"raw": "{{baseurl}}/api/lobby/join",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"api",
+						"lobby",
+						"join"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Join lobby user4",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a56dedc5-1b1d-4ea8-acc5-ace15ecd8f78",
+						"exec": [
+							"pm.test(\"Session data\", () => {",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson.player_name).to.eql(",
+							"        pm.variables.get(\"name\")",
+							"    )",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "371baa89-e612-4a74-bb59-9e0947bdcb7c",
+						"exec": [
+							"pm.variables.set(\"name\", \"user4\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"joinCode\": \"{{joinCode}}\",\n    \"name\": \"{{name}}\"\n}"
+				},
+				"url": {
+					"raw": "{{baseurl}}/api/lobby/join",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"api",
+						"lobby",
+						"join"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
