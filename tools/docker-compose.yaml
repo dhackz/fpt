@@ -3,7 +3,8 @@ version: '3'
 services:
   reverse-proxy:
     image: nginx
-    network_mode: host
+    ports:
+      - "8000:8000"
     volumes:
       - "./conf:/etc/nginx/conf.d"
   redis-primary:
