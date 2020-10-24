@@ -1,4 +1,6 @@
 # gemgemgem <- an awesome project!
+![Build](https://github.com/dhackz/fpt/workflows/build-containers/badge.svg)
+![Integration](https://github.com/dhackz/fpt/workflows/Create%20cluster%20using%20KinD/badge.svg)
 
 
 
