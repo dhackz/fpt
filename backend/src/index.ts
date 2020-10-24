@@ -59,6 +59,6 @@ createProxy(server, redis, log)
 server.listen(8080, () => {
     let host = server.address().address;
     let port = server.address().port;
-    initSessionHandler(redis, rsub, rpub);
+    initSessionHandler(redis, rsub, rpub, log);
     log.info("App listening at http://"+host+":"+port);
 })
