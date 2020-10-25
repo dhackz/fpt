@@ -84,7 +84,7 @@ jobs:
         run: docker run --network=host --rm -v $(pwd)/tests/postman:/opt/postman postman/newman run /opt/postman/fpt.postman_collection.json
 
       - name: Add google pgp key
-        run: curl https://dl.google.com/linux/linux_signing_key.pub | sudo apt-get add -
+        run: curl https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
       - name: Add ppa repo
         run: echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
       - name: Install google-chrome
