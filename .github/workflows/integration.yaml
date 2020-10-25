@@ -83,5 +83,8 @@ jobs:
       - name: Run backend api tests
         run: docker run --network=host --rm -v $(pwd)/tests/postman:/opt/postman postman/newman run /opt/postman/fpt.postman_collection.json
 
+      - name: Install google-chrome
+        run: sudo apt-get update && sudo apt-get install google-chrome
       - name: Run backend api tests
-        run: docker run --network=host --rm -v $(pwd)/tests/webdriver:/opt/webdriver --workdir /opt/webdriver node bash -c "yarn install && yarn wdio wdio.conf.js"
+        working-directory: tests/webdriver
+        run: yarn install && yarn wdio wdio.conf.js
