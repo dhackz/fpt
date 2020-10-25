@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  helm-test:
+  integration-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -89,6 +89,6 @@ jobs:
         run: sudo bash -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list'
       - name: Install google-chrome
         run: sudo apt-get update && sudo apt-get install google-chrome-stable
-      - name: Run backend api tests
+      - name: Run frontend integration tests
         working-directory: tests/webdriver
         run: yarn install && yarn wdio wdio.conf.js
