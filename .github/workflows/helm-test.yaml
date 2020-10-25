@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  helm-test:
+  integration-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -81,3 +81,17 @@ jobs:
         run: helm upgrade --wait --install --devel fpt ./fpt-charts 
       - name: Run api tests
         run: docker run --network=host --rm -v $(pwd)/tests/postman:/opt/postman postman/newman run /opt/postman/fpt.postman_collection.json
+
+      - name: Install cypress
+        working-directory: tests/cypress
+        run: yarn install
+      - name: Run integration tests
+        working-directory: tests/cypress
+        run: yarn cypress run --headless
+
+      - name: Upload test videos
+        working-directory: tests/cypress
+        uses: actions/upload-artifact@v2
+        with:
+          name: code-coverage-report
+          path: cypress/videos/*
