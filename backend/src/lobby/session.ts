@@ -4,7 +4,6 @@ const sessions = {};
 const lobbies = {};
 let counter = 1;
 let redis, rsub, rpub;
-<<<<<<< HEAD
 let log;
 
 let redisHandler;
@@ -128,7 +127,6 @@ let getSession = (sessionId, redis) => {
   return sessions[sessionId];
 };
 
-<<<<<<< HEAD
 let createLobby = (json, redis, rsub, log) => {
     const FUNC_NAME = "createLobby";
 
