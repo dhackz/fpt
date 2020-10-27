@@ -73,62 +73,62 @@ let createProxy = (server, redis, log) => {
         break
     }
   }
-}
+  async function gameClientUpdate(ws: WebSocket, message) {
+    let FUNC_NAME="gameClientUpdate";
 
-async function gameClientUpdate(ws: WebSocket, message) {
-  let FUNC_NAME="gameClientUpdate";
-
-  if (!sessionExists(message.sessionId)) {
-    const error = "No such sessionId exists: " + message.sessionId;
-    ws.send(JSON.stringify({error}));
-  }
-
-  // There should already be a valid session.
-  let session = await redis.get('session:'+message.sessionId);
-  log.debug("Result fetched session with id session: "+session);
-
-  switch (message.action) {
-    case 'register':
-      ws.send(JSON.stringify({message:{players:[message.name], playerName:message.name}}))
-      break;
-    case 'sendAll':
-      break;
-    case 'sendTo':
-      break;
-    default:
-      const error = `Invalid action: ${message.action}! Closing socket.`;
-      log.warn(error)
+    if (!sessionExists(message.sessionId)) {
+      const error = "No such sessionId exists: " + message.sessionId;
       ws.send(JSON.stringify({error}));
-      break
-  }
-}
-
-wss.on('listening', () => {
-  const addressInfo = wss.address();
-  log.info("Proxy server started. Listening on ws://"+addressInfo['address']+":"+addressInfo['port'])
-})
-
-wss.on('connection', (ws,req) => {
-  log.info("New client connected!")
-  ws.send(JSON.stringify({connected:true}));
-
-  ws.on('message', (data: string) => {
-    let FUNC_NAME = "message";
-    log.debug("data: "+data)
-
-    //TODO(dawidstrom): validate JSON data format.
-    var message = JSON.parse(data);
-
-    if (message.actor == "client") {
-      gameClientUpdate(ws, message);
-    } else if (message.actor == "server") {
-      gameServerUpdate(ws, message);
-    } else {
-      log.error("Who tf is this?")
     }
 
-    log.info("New connection established!");
+    // There should already be a valid session.
+    let session = await redis.get('session:'+message.sessionId);
+    log.debug("Result fetched session with id session: "+session);
+
+    switch (message.action) {
+      case 'register':
+        ws.send(JSON.stringify({message:{players:[message.name], playerName:message.name}}))
+        break;
+      case 'sendAll':
+        break;
+      case 'sendTo':
+        break;
+      default:
+        const error = `Invalid action: ${message.action}! Closing socket.`;
+        log.warn(error)
+        ws.send(JSON.stringify({error}));
+        break
+    }
+  }
+  wss.on('listening', () => {
+    const addressInfo = wss.address();
+    log.info("Proxy server started. Listening on ws://"+addressInfo['address']+":"+addressInfo['port'])
   })
-})
+
+  wss.on('connection', (ws,req) => {
+    log.info("New client connected!")
+    ws.send(JSON.stringify({connected:true}));
+
+    ws.on('message', (data: string) => {
+      let FUNC_NAME = "message";
+      log.debug("data: "+data)
+
+      //TODO(dawidstrom): validate JSON data format.
+      var message = JSON.parse(data);
+
+      if (message.actor == "client") {
+        gameClientUpdate(ws, message);
+      } else if (message.actor == "server") {
+        gameServerUpdate(ws, message);
+      } else {
+        log.error("Who tf is this?")
+      }
+
+      log.info("New connection established!");
+    })
+  })
+}
+
+
 
 export { createProxy, channelPusher, onChannelMessage };

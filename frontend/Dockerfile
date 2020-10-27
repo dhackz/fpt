@@ -1,5 +1,4 @@
 FROM node:alpine as builder
-COPY . /tmp/frontend
 WORKDIR /tmp/frontend
 COPY yarn.lock /tmp/frontend/
 COPY package.json /tmp/frontend/

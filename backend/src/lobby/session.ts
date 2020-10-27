@@ -54,14 +54,6 @@ class RedisHandler {
 
 let socketPusher = onChannelMessage;
 
-let initSessionHandler = (r, s, p) => {
-  redis = r;
-  rsub = s;
-  rpub = p;
-  channelPusher(rpub);
-  rsub.on("message", handleMessageBus);
-};
-
 let handleJoinLobby = (sessionId, playerName) => {
   let sessionKey = "session:" + sessionId;
   let playersKey = sessionKey + ":players";

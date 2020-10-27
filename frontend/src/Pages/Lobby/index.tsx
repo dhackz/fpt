@@ -62,10 +62,7 @@ const Lobby = () => {
       onclose: e => console.log('Closed!', e),
       onerror: e => console.log('Error:', e)
     });
-
-  useEffect(() => {
-    newSocketListener(onMessage);
-  }, []);
+  });
 
   const startGame = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
@@ -85,15 +82,6 @@ const Lobby = () => {
   const title = 'Secret Mussolini';
 
   return role === 'server' ? (
-    <>
-      <Styled.Fullscreen>
-        <Styled.BackgroundCircle />
-        <Styled.HostTitle>{title}</Styled.HostTitle>
-        <Styled.HostCode>Join code: {joinCode}</Styled.HostCode>
-        <Styled.StartButton onClick={startGame}>Start game</Styled.StartButton>
-      </Styled.Fullscreen>
-    </>
-  ) : (
     <Styled.Fullscreen>
       <Styled.BackgroundCircle />
       <Styled.ClientText>{title}</Styled.ClientText>
