@@ -27,14 +27,14 @@ const Lobby = () => {
   };
 
   useEffect(() => {
-    let apiUrl = process.env.REACT_APP_API_URL
-    if(apiUrl) {
-        apiUrl = apiUrl.replace(/^http(s)?/, "ws")
+    let websocketUrl = window.location.host
+    if(window.location.protocol == 'https:') {
+      websocketUrl = 'wss://' + websocketUrl
     } else {
-        apiUrl = "ws://" + window.location.host
+      websocketUrl = 'ws://' + websocketUrl
     }
 
-    const ws: Sockette = new Sockette(apiUrl + "/api/socket/" + session, {
+    const ws: Sockette = new Sockette(websocketUrl + "/api/socket/" + session, {
       timeout: 5e3,
       maxAttempts: 10,
       onopen: (e: Event) => () => {
@@ -53,7 +53,7 @@ const Lobby = () => {
 
   const startGame = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    const url = process.env.REACT_APP_API_URL + '/api/lobby/start';
+    const url = window.location.origin + '/api/lobby/start';
     const response = await axios.post(
       url,
       { join_code: joinCode },

@@ -12,7 +12,7 @@ const JoinLobby = () => {
   const { setUserRole, setSession } = useGameState();
 
   const joinLobby = async () => {
-    const url = process.env.REACT_APP_API_URL + '/api/lobby/join';
+    const url = window.location.origin + '/api/lobby/join';
     const response = await axios.post(
       url,
       { join_code: joinCode, name: nickname },
