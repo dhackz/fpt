@@ -9,7 +9,7 @@ const SelectGamemode = () => {
   const { setUserRole, setSession } = useGameState();
 
   const createLobby = async () => {
-    const url = process.env.REACT_APP_API_URL + '/api/lobby/new';
+    const url = window.location.origin + '/api/lobby/new';
     const response = await axios.post(
       url,
       { game: 'secret' },
