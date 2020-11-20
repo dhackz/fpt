@@ -1,6 +1,6 @@
 import Sockette from 'sockette';
 const newSocketListener = (cb: (socket: Sockette, event: MessageEvent) => any) => {
-  const ws: Sockette = new Sockette('ws://localhost:8080', {
+  const ws: Sockette = new Sockette('ws://localhost:8000/api', {
     timeout: 5e3,
     maxAttempts: 10,
     onopen: (e: Event) => () => {

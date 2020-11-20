@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import Sockette from 'sockette';
 import axios from 'axios';
 import useGameState from '../../hooks/useGameState';
@@ -8,7 +8,7 @@ import { newSocketListener } from '../../tools/socket';
 const Lobby = () => {
   const joinCode = window.location.pathname.split('/')[2];
   const { role, setLobbySocket, session, playerName, setPlayerName } = useGameState();
-  const players = useRef<Array<String>>([]);
+  const [players, setPlayers] = useState<Array<String>>([]);
   const onMessage = (ws: Sockette, message: MessageEvent) => {
     message.preventDefault();
     const json = JSON.parse(message.data);
@@ -30,19 +30,21 @@ const Lobby = () => {
       console.log('we joined the game');
       if (json.message.playerName) {
         setPlayerName(json.message.playerName);
-        players.current = [...players.current, json.message.playerName];
+        setPlayers(prevPlayers => {return [...prevPlayers, json.newPlayer]});
       }
     }
     if (json.newPlayer) {
-      console.log('a new player joined: ', json.newPlayer);
-      console.log('players was: ', players.current);
-      console.log('all players are now: ', [...players.current, json.newPlayer]);
-      players.current = [...players.current, json.newPlayer];
+      setPlayers(prevPlayers => {
+        console.log('a new player joined: ', json.newPlayer);
+        console.log('players was: ', prevPlayers);
+        console.log('all players are now: ', [...prevPlayers, json.newPlayer]);
+        return [...prevPlayers, json.newPlayer]
+      });
     }
   };
 
   useEffect(() => {
-    console.log('players was changed', players.current);
+    console.log('players was changed', players);
   }, [players]);
 
   useEffect(() => {
